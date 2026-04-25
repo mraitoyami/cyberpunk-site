@@ -432,6 +432,59 @@ body.lang-trad{font-family:"Noto Serif Mongolian","Segoe UI",serif}
   .musgrid{grid-template-columns:1fr}
   .osel{grid-template-columns:1fr 1fr}
 }
+
+/* ══ LEADERBOARD ══ */
+.lb-live{display:inline-flex;align-items:center;gap:5px;margin-left:auto;font-size:.65em;color:rgba(255,255,255,.45);letter-spacing:.5px}
+.lb-dot{width:7px;height:7px;border-radius:50%;background:#2ecc71;flex-shrink:0;box-shadow:0 0 6px #2ecc71;animation:lbPulse 1.6s infinite}
+@keyframes lbPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}}
+.lb-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.lb-tab{background:rgba(255,255,255,.04);border:1px solid rgba(212,175,55,.2);color:rgba(255,255,255,.55);padding:8px 16px;border-radius:22px;cursor:pointer;font-size:.8em;transition:.2s;flex:1;text-align:center;white-space:nowrap}
+.lb-tab.on{background:linear-gradient(135deg,rgba(212,175,55,.25),rgba(176,58,46,.2));border-color:var(--gold);color:var(--gold);font-weight:bold;box-shadow:0 0 14px rgba(212,175,55,.18)}
+.lb-tab:hover:not(.on){background:rgba(212,175,55,.09);color:rgba(212,175,55,.8)}
+.lb-loading,.lb-err,.lb-empty{text-align:center;padding:36px;color:rgba(255,255,255,.35);font-size:.84em}
+.lb-err{color:rgba(255,100,100,.6)}
+
+/* Podium */
+.lb-podium{display:flex;justify-content:center;align-items:flex-end;gap:8px;margin:4px 0 18px;padding:0 6px}
+.lb-pod-item{display:flex;flex-direction:column;align-items:center;flex:1;max-width:120px;animation:podIn .5s cubic-bezier(.175,.885,.32,1.275) both}
+.lb-pod-item:nth-child(1){animation-delay:.15s}
+.lb-pod-item:nth-child(2){animation-delay:0s}
+.lb-pod-item:nth-child(3){animation-delay:.3s}
+@keyframes podIn{from{opacity:0;transform:translateY(20px) scale(.85)}to{opacity:1;transform:none;scale:1}}
+.lb-pod-item.me .lb-pod-name{color:var(--gold);text-shadow:0 0 8px rgba(212,175,55,.5)}
+.lb-pod-crown{font-size:1.3em;margin-bottom:2px;animation:crownBob 2s ease-in-out infinite}
+@keyframes crownBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.lb-pod-name{font-size:.8em;color:rgba(255,255,255,.9);text-align:center;margin-bottom:1px;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+.lb-pod-rank-badge{font-size:.62em;color:rgba(255,255,255,.4);margin-bottom:3px;text-align:center}
+.lb-pod-score{font-size:.9em;font-weight:bold;color:var(--gold);margin-bottom:5px;text-shadow:0 0 8px rgba(212,175,55,.4)}
+.lb-pod-base{width:100%;border-radius:8px 8px 0 0;display:flex;align-items:flex-start;justify-content:center;padding-top:7px;min-width:64px;position:relative}
+.lb-pod-pos{position:absolute;bottom:5px;font-size:.7em;font-weight:bold;color:rgba(0,0,0,.5)}
+
+/* List */
+.lb-list{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.lb-row{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.03);border:1px solid rgba(212,175,55,.1);border-radius:9px;padding:10px 12px;font-size:.8em;animation:lbSlide .35s ease both}
+.lb-row.me{background:rgba(212,175,55,.1);border-color:rgba(212,175,55,.4);box-shadow:0 0 12px rgba(212,175,55,.1)}
+.lb-row:nth-child(1){animation-delay:.0s}
+.lb-row:nth-child(2){animation-delay:.05s}
+.lb-row:nth-child(3){animation-delay:.1s}
+.lb-row:nth-child(4){animation-delay:.13s}
+.lb-row:nth-child(5){animation-delay:.16s}
+.lb-row:nth-child(6){animation-delay:.19s}
+.lb-row:nth-child(7){animation-delay:.22s}
+@keyframes lbSlide{from{opacity:0;transform:translateX(-16px)}to{opacity:1;transform:none}}
+.lb-pos{width:32px;text-align:center;font-size:.9em;flex-shrink:0;font-weight:bold}
+.lb-name{flex:1;color:rgba(255,255,255,.88);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb-rank-chip{background:rgba(212,175,55,.1);border:1px solid rgba(212,175,55,.22);color:rgba(212,175,55,.75);padding:2px 7px;border-radius:11px;font-size:.7em;flex-shrink:0;white-space:nowrap}
+.lb-score{font-weight:bold;color:var(--gold);flex-shrink:0;min-width:38px;text-align:right;font-size:.88em}
+.lb-me-row{background:rgba(212,175,55,.07);border:1px solid rgba(212,175,55,.25);border-radius:9px;padding:9px 12px;display:flex;align-items:center;gap:9px;font-size:.78em;margin-top:8px}
+.lb-submit{text-align:center;padding:12px 0 2px;border-top:1px solid rgba(212,175,55,.1);margin-top:4px}
+.lb-submit-msg{font-size:.74em;color:rgba(255,255,255,.45);margin-top:5px;min-height:1em}
+@media(max-width:620px){
+  .lb-tab{padding:7px 9px;font-size:.74em}
+  .lb-podium{gap:5px}
+  .lb-pod-name{font-size:.72em;max-width:80px}
+  .lb-pod-score{font-size:.8em}
+}
 </style>
 </head>
 <body>
@@ -511,6 +564,7 @@ body.lang-trad{font-family:"Noto Serif Mongolian","Segoe UI",serif}
       <div class="pnl" id="p-ach"></div>
       <div class="pnl" id="p-mus"></div>
       <div class="pnl" id="p-cult"></div>
+      <div class="pnl" id="p-lb"></div>
     </div>
   </div>
 </div>
@@ -520,6 +574,8 @@ body.lang-trad{font-family:"Noto Serif Mongolian","Segoe UI",serif}
 <!-- UNLOCK -->
 <div class="uov" id="uov"><div class="u-ico" id="uI"></div><div class="u-title" id="uT"></div><div class="u-desc" id="uD"></div><button class="btn" style="margin-top:14px" id="uBtn"></button></div>
 
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script>
 
 // ══════════════════════════════════════════════════
@@ -1162,7 +1218,8 @@ function buildNav() {
     {id:'shop',ico:'🛒',lbl:tx.navShop},
     {id:'ach',ico:'🏆',lbl:tx.navAch},
     {id:'mus',ico:'📚',lbl:tx.navMus},
-    {id:'cult',ico:'🏛️',lbl:tx.navCult}
+    {id:'cult',ico:'🏛️',lbl:tx.navCult},
+    {id:'lb',ico:'🏆',lbl:lang==='mn'?'Тэргүүлэгч':lang==='en'?'Ranking':'ᠲᠡᠷᠢᠭᠦᠯᠡᠭᠴᠢ'}
   ];
   el('gNav').innerHTML = navItems.map(n =>
     `<button class="nb${curPanel===n.id?' on':''}" onclick="renderPanel('${n.id}')"><span class="ni">${n.ico}</span>${n.lbl}</button>`
@@ -1170,6 +1227,7 @@ function buildNav() {
 }
 
 function renderPanel(id) {
+  if(id !== 'lb' && lbUnsubscribe){ lbUnsubscribe(); lbUnsubscribe = null; }
   curPanel = id;
   document.querySelectorAll('.pnl').forEach(p => p.classList.remove('on'));
   el('p-'+id).classList.add('on');
@@ -1183,6 +1241,7 @@ function renderPanel(id) {
     case 'ach': buildAch(); break;
     case 'mus': buildMus(); break;
     case 'cult': buildCult(); break;
+    case 'lb': buildLb(); break;
   }
 }
 
@@ -1266,6 +1325,7 @@ function newDay() {
   gs.daily = {trains:0, battleWon:0, challengeIdx:Math.floor(Math.random()*S[lang].challengeList.length)};
   updateHeader();
   buildHome();
+  setTimeout(submitScore, 500);
   const tx = S[lang];
   showModal(tx.newDayTitle,'🌅',sprintf(tx.newDayMsg,gs.day),[{l:tx.gotIt}]);
 }
@@ -1479,6 +1539,7 @@ function endBattle(won) {
     gs.wins++; gs.xp += opp.xp; gs.gold += opp.gold;
     gs.daily.battleWon++;
     checkRankUp(); checkAchs();
+    setTimeout(submitScore, 1200); // silent auto-submit
     const ch = tx.challengeList[gs.daily.challengeIdx];
     if(ch.type==='win' && gs.daily.battleWon>=ch.n && !gs.daily.chDone){
       gs.daily.chDone=true; gs.xp+=ch.xp; gs.gold+=ch.gold;
@@ -1866,8 +1927,185 @@ function closeModal(i){
 // ═══ UTIL ═══
 function sprintf(s,...a){ let i=0; return s.replace(/%[sd]/g,()=>a[i++]??''); }
 
+// ══════════════════════════════════════════════════
+//  FIREBASE + LEADERBOARD
+// ══════════════════════════════════════════════════
+let db = null;
+let lbTab = 'wins';
+let lbUnsubscribe = null;
+let playerId = null;
+
+function initFirebase() {
+  const cfg = {
+    apiKey: "AIzaSyDAaJUkkCQVT247ZWqFNXVwK8u63UzFyHs",
+    authDomain: "avargiinzam.firebaseapp.com",
+    projectId: "avargiinzam",
+    storageBucket: "avargiinzam.firebasestorage.app",
+    messagingSenderId: "53486976666",
+    appId: "1:53486976666:web:8e78ca651ba451ab852923",
+    measurementId: "G-K1SKMWECJ5"
+  };
+  try {
+    if (!firebase.apps.length) firebase.initializeApp(cfg);
+    db = firebase.firestore();
+    playerId = localStorage.getItem('devjee_pid');
+    if (!playerId) {
+      playerId = 'p_' + Date.now() + '_' + Math.random().toString(36).substr(2,9);
+      localStorage.setItem('devjee_pid', playerId);
+    }
+  } catch(e) { console.warn('Firebase init failed:', e.message); }
+}
+
+function getToday() {
+  return new Date().toISOString().split('T')[0];
+}
+
+async function submitScore() {
+  if (!db || !gs || !playerId) return false;
+  const tx = S[lang];
+  try {
+    await db.collection('scores').doc(playerId).set({
+      name: gs.name,
+      wins: gs.wins,
+      xp: gs.xp,
+      gold: gs.gold,
+      rank: gs.rank,
+      rankName: tx.ranks[gs.rank],
+      dailyWins: gs.daily.battleWon,
+      date: getToday(),
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    return true;
+  } catch(e) { console.warn('Submit error:', e); return false; }
+}
+
+// ─── Leaderboard UI ───
+function lbLabel(key) {
+  const map = {
+    title:   {mn:'Тэргүүлэгч',   en:'Leaderboard',   tr:'ᠲᠡᠷᠢᠭᠦᠯᠡᠭᠴᠢ'},
+    wins:    {mn:'🏆 Ялалт',      en:'🏆 Wins',        tr:'🏆 ᠢᠯᠠᠯᠲᠠ'},
+    xp:      {mn:'⭐ XP',         en:'⭐ XP',          tr:'⭐ XP'},
+    gold:    {mn:'🪙 Алт',        en:'🪙 Gold',        tr:'🪙 ᠠᠯᠲᠠ'},
+    daily:   {mn:'📅 Өнөөдөр',    en:'📅 Today',       tr:'📅 ᠥᠨᠥᠳᠥᠷ'},
+    loading: {mn:'Ачааллаж байна…',en:'Loading…',     tr:'ᠠᠴᠢᠶᠠᠯᠠᠵᠤ…'},
+    nodata:  {mn:'Бичлэг алга',   en:'No entries yet',tr:'ᠪᠢᠴᠢᠯᠭᠡ ᠠᠯᠠᠭ᠎ᠠ'},
+    submit:  {mn:'📤 Оноо илгээх',en:'📤 Submit Score',tr:'📤 ᠣᠨᠣᠭ᠎ᠠ ᠢᠯᠡᠭᠡᠬᠦ'},
+    ok:      {mn:'✅ Илгээлээ!',  en:'✅ Submitted!',  tr:'✅ ᠠᠮᠵᠢᠯᠲᠠᠲᠠᠢ!'},
+    err:     {mn:'❌ Алдаа',      en:'❌ Error',       tr:'❌ ᠠᠯᠳᠠᠭ᠎ᠠ'},
+    nofire:  {mn:'Firebase холбогдоогүй',en:'Firebase not connected',tr:'Firebase ᠬᠣᠯᠪᠤᠭᠳᠠᠭᠰᠠᠨᠤᠭᠤᠢ'},
+    live:    {mn:'Шууд',         en:'Live',           tr:'ᠱᠤᠤᠳ'},
+    you:     {mn:'Таны байр',    en:'Your rank',      tr:'ᠲᠠᠨ ᠦ ᠪᠠᠢᠷᠢ'}
+  };
+  return (map[key]||{})[lang] || (map[key]||{}).en || key;
+}
+
+function buildLb() {
+  const tabs = ['wins','xp','gold','daily'];
+  el('p-lb').innerHTML = `
+    <div class="ptitle">🏆 ${lbLabel('title')}
+      <span class="lb-live"><span class="lb-dot"></span>${lbLabel('live')}</span>
+    </div>
+    <div class="lb-tabs">
+      ${tabs.map(t=>`<button class="lb-tab${lbTab===t?' on':''}" onclick="switchLbTab('${t}')">${lbLabel(t)}</button>`).join('')}
+    </div>
+    <div id="lbContent"><div class="lb-loading">⏳ ${lbLabel('loading')}</div></div>
+    <div class="lb-submit">
+      <button class="btn btn-r" onclick="doSubmitScore()" id="lbSubmitBtn">${lbLabel('submit')}</button>
+      <div class="lb-submit-msg" id="lbSubmitMsg"></div>
+    </div>
+  `;
+  loadLbData();
+}
+
+function switchLbTab(tab) {
+  if(lbUnsubscribe){ lbUnsubscribe(); lbUnsubscribe=null; }
+  lbTab = tab;
+  buildLb();
+}
+
+function loadLbData() {
+  if (!db) {
+    el('lbContent').innerHTML = `<div class="lb-err">🔌 ${lbLabel('nofire')}</div>`;
+    return;
+  }
+  const col = db.collection('scores');
+  let q;
+  if      (lbTab==='wins')  q = col.orderBy('wins','desc').limit(10);
+  else if (lbTab==='xp')    q = col.orderBy('xp','desc').limit(10);
+  else if (lbTab==='gold')  q = col.orderBy('gold','desc').limit(10);
+  else                      q = col.where('date','==',getToday()).orderBy('dailyWins','desc').limit(10);
+
+  lbUnsubscribe = q.onSnapshot(snap => {
+    renderLbEntries(snap.docs.map((d,i)=>({id:d.id, pos:i+1, ...d.data()})));
+  }, err => {
+    el('lbContent') && (el('lbContent').innerHTML = `<div class="lb-err">❌ ${err.message}</div>`);
+  });
+}
+
+function renderLbEntries(entries) {
+  const sf = {wins:'wins',xp:'xp',gold:'gold',daily:'dailyWins'}[lbTab];
+  const medals = ['🥇','🥈','🥉'];
+
+  if (!entries.length) {
+    el('lbContent').innerHTML = `<div class="lb-empty">🏜️ ${lbLabel('nodata')}</div>`;
+    return;
+  }
+
+  const fmt = n => (n||0).toLocaleString();
+  let html = '';
+
+  // ── Podium (top 3) ──
+  if (entries.length >= 2) {
+    const p = [entries[1]||null, entries[0]||null, entries[2]||null]; // L C R
+    const ht = ['72px','94px','56px'];
+    const cl = ['#9E9E9E','#D4AF37','#8D6E63'];
+    const md = ['🥈','🥇','🥉'];
+    html += `<div class="lb-podium">`;
+    p.forEach((e,i) => {
+      if (!e) { html+=`<div class="lb-pod-item"></div>`; return; }
+      const me = e.id===playerId;
+      html += `<div class="lb-pod-item${me?' me':''}">
+        ${i===1?`<div class="lb-pod-crown">👑</div>`:''}
+        <div class="lb-pod-name">${e.name||'?'}${me?' 👈':''}</div>
+        <div class="lb-pod-rank-badge">${e.rankName||''}</div>
+        <div class="lb-pod-score">${fmt(e[sf])}</div>
+        <div class="lb-pod-base" style="height:${ht[i]};background:linear-gradient(180deg,${cl[i]}dd,${cl[i]}88)">
+          <div style="font-size:1.9em;padding-top:4px">${md[i]}</div>
+          <div class="lb-pod-pos">#${e.pos}</div>
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  // ── Full ranked list ──
+  html += `<div class="lb-list">`;
+  entries.forEach((e,i) => {
+    const me = e.id===playerId;
+    html += `<div class="lb-row${me?' me':''}">
+      <span class="lb-pos">${i<3?medals[i]:'#'+(i+1)}</span>
+      <span class="lb-name">${e.name||'?'}${me?' 👈':''}</span>
+      <span class="lb-rank-chip">${e.rankName||''}</span>
+      <span class="lb-score">${fmt(e[sf])}</span>
+    </div>`;
+  });
+  html += `</div>`;
+
+  el('lbContent').innerHTML = html;
+}
+
+async function doSubmitScore() {
+  const btn = el('lbSubmitBtn'); const msg = el('lbSubmitMsg');
+  if (!gs) { if(msg) msg.textContent='⚠️ Start a game first!'; return; }
+  if (btn) { btn.disabled=true; btn.textContent='⏳…'; }
+  const ok = await submitScore();
+  if (btn) { btn.disabled=false; btn.textContent=lbLabel('submit'); }
+  if (msg) { msg.textContent = ok ? lbLabel('ok') : lbLabel('err'); setTimeout(()=>{ if(msg) msg.textContent=''; },3000); }
+}
+
 // ═══ INIT ═══
 (function init(){
+  initFirebase();
   setLang('mn');
   goScr('s-start');
 })();
