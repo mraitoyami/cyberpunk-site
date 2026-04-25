@@ -1,66 +1,1876 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="mn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
-    <title>Modern Login Page | AsmrProg</title>
-</head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Дэвжээ: Аваргын Зам</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Mongolian&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--gold:#D4AF37;--dg:#9A7B0A;--red:#B03A2E;--dr:#6E2119;--blue:#0D1F3C;--db:#07101E;--light:#F5F0E8;--green:#1E8449;--lg:#2ECC71}
+html,body{height:100%;overflow:hidden}
+body{background:var(--db);color:var(--light);font-family:"Segoe UI",Arial,sans-serif;display:flex;flex-direction:column}
+body.lang-trad{font-family:"Noto Serif Mongolian","Segoe UI",serif}
 
+/* ── SCREENS ── */
+.scr{display:none;flex-direction:column;height:100%}
+.scr.on{display:flex}
+
+/* ═══ START SCREEN ═══ */
+#s-start{
+  background:radial-gradient(ellipse at 50% 30%,#0d2a50 0%,#07101e 70%);
+  align-items:center;justify-content:center;text-align:center;
+  position:relative;overflow:hidden
+}
+.start-deco{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.start-deco::before{
+  content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+  background:repeating-conic-gradient(rgba(212,175,55,.03) 0deg 10deg,transparent 10deg 20deg);
+  animation:rotDeco 60s linear infinite
+}
+@keyframes rotDeco{to{transform:rotate(360deg)}}
+.start-orb{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none}
+.orb1{width:400px;height:400px;background:rgba(176,58,46,.12);top:-100px;left:-100px}
+.orb2{width:300px;height:300px;background:rgba(212,175,55,.08);bottom:-50px;right:-50px}
+
+.start-inner{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:0}
+.s-emblem{font-size:4.5em;margin-bottom:8px;filter:drop-shadow(0 0 20px rgba(212,175,55,.4))}
+.s-title{font-size:clamp(2em,6vw,3.2em);font-weight:900;color:var(--gold);letter-spacing:4px;text-shadow:0 0 40px rgba(212,175,55,.5),0 2px 8px #000;line-height:1}
+.s-sub{font-size:clamp(.8em,2.2vw,1.05em);color:rgba(212,175,55,.7);letter-spacing:3px;margin-top:4px;margin-bottom:6px}
+.s-tagline{font-size:clamp(.65em,1.6vw,.82em);color:rgba(255,255,255,.45);margin-bottom:22px;letter-spacing:1px}
+
+/* Lang picker */
+.lang-pick{display:flex;gap:8px;margin-bottom:20px;justify-content:center}
+.lp-btn{background:rgba(255,255,255,.06);border:1px solid rgba(212,175,55,.25);color:rgba(255,255,255,.65);padding:7px 18px;border-radius:20px;cursor:pointer;font-size:.85em;transition:.2s;letter-spacing:.5px;white-space:nowrap}
+.lp-btn:hover{background:rgba(212,175,55,.15);border-color:rgba(212,175,55,.6);color:var(--gold)}
+.lp-btn.on{background:rgba(212,175,55,.2);border-color:var(--gold);color:var(--gold);font-weight:bold;box-shadow:0 0 12px rgba(212,175,55,.2)}
+.lp-btn.trad-font{font-family:"Noto Serif Mongolian",serif;font-size:.8em}
+
+/* Start menu */
+.s-menu{display:flex;flex-direction:column;gap:9px;width:min(280px,85vw)}
+.s-mbtn{background:rgba(255,255,255,.06);border:1px solid rgba(212,175,55,.3);color:var(--light);padding:13px 20px;border-radius:10px;cursor:pointer;font-size:.95em;font-weight:600;letter-spacing:.5px;transition:.25s;display:flex;align-items:center;gap:10px;text-align:left}
+.s-mbtn:hover{background:rgba(212,175,55,.15);border-color:var(--gold);transform:translateX(5px);box-shadow:0 4px 18px rgba(212,175,55,.2)}
+.s-mbtn.primary{background:linear-gradient(135deg,rgba(176,58,46,.8),rgba(110,33,25,.9));border-color:rgba(212,175,55,.6)}
+.s-mbtn.primary:hover{background:linear-gradient(135deg,#c0392b,#922b21)}
+.s-ver{margin-top:14px;font-size:.65em;color:rgba(255,255,255,.2)}
+
+/* ═══ SUBSCREEN (howtoplay/about) ═══ */
+.sub-scr{background:linear-gradient(180deg,#0d1f3c,#070f1e);overflow-y:auto}
+.sub-wrap{max-width:700px;margin:0 auto;padding:20px 16px}
+.sub-back{background:none;border:1px solid rgba(212,175,55,.3);color:rgba(212,175,55,.8);padding:6px 14px;border-radius:8px;cursor:pointer;font-size:.82em;margin-bottom:14px;transition:.2s}
+.sub-back:hover{background:rgba(212,175,55,.1);color:var(--gold)}
+.sub-title{font-size:1.4em;color:var(--gold);margin-bottom:5px;font-weight:bold}
+.sub-intro{font-size:.82em;color:rgba(255,255,255,.55);margin-bottom:18px}
+.sub-card{background:rgba(255,255,255,.04);border:1px solid rgba(212,175,55,.18);border-radius:10px;padding:14px;margin-bottom:12px}
+.sub-card h3{color:var(--gold);font-size:.9em;margin-bottom:9px;display:flex;align-items:center;gap:7px}
+.sub-card p,.sub-card li{font-size:.82em;color:rgba(255,255,255,.78);line-height:1.7;margin:3px 0}
+.sub-card ul{padding-left:15px}
+.htp-g2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:7px}
+.htp-box{background:rgba(0,0,0,.2);border-radius:7px;padding:9px;text-align:center}
+.htp-box .bi{font-size:1.7em;margin-bottom:4px}
+.htp-box h4{color:var(--gold);font-size:.78em;margin-bottom:2px}
+.htp-box p{font-size:.72em;color:rgba(255,255,255,.6)}
+.td-bar{background:rgba(255,255,255,.08);border:1px solid var(--gold);border-radius:15px;height:24px;position:relative;overflow:hidden;margin:7px 0}
+.td-zone{position:absolute;top:0;bottom:0;left:35%;width:24%;background:rgba(0,200,0,.35)}
+.td-cur{position:absolute;top:3px;bottom:3px;width:16px;background:var(--gold);border-radius:10px;left:5%;animation:tdSlide 2s linear infinite}
+@keyframes tdSlide{0%{left:3%}100%{left:79%}}
+.rank-row{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px;margin-top:8px}
+.rr-node{text-align:center;font-size:.68em}
+.rr-ico{font-size:1.3em}
+
+/* ═══ NEW GAME ═══ */
+#s-newgame{background:radial-gradient(ellipse at center,#0d1f3c,#070f1e);align-items:center;justify-content:center}
+.ng-box{background:rgba(255,255,255,.04);border:2px solid rgba(212,175,55,.35);border-radius:14px;padding:28px;max-width:380px;width:90%;text-align:center}
+.ng-box h2{color:var(--gold);font-size:1.25em;margin-bottom:5px}
+.ng-box .ng-sub{font-size:.8em;color:rgba(255,255,255,.55);margin-bottom:18px}
+.ng-input{background:rgba(255,255,255,.07);border:1px solid rgba(212,175,55,.35);color:var(--light);padding:11px 14px;border-radius:8px;font-size:1em;width:100%;text-align:center;margin-bottom:12px}
+.ng-input:focus{outline:none;border-color:var(--gold);background:rgba(212,175,55,.08)}
+.ng-presets{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:16px}
+.ng-pre{background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.25);color:rgba(255,255,255,.7);padding:4px 11px;border-radius:12px;cursor:pointer;font-size:.78em;transition:.2s}
+.ng-pre:hover{background:rgba(212,175,55,.2);color:var(--gold)}
+
+/* ═══ GAME SCREEN ═══ */
+#s-game{flex-direction:column;height:100%}
+.g-hdr{background:linear-gradient(90deg,var(--dr),#c0392b,var(--dr));border-bottom:2px solid rgba(212,175,55,.5);padding:6px 14px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.gh-l{display:flex;align-items:center;gap:8px}
+.gh-logo{font-size:.88em;color:var(--gold);font-weight:bold;letter-spacing:1px}
+.gh-name{font-size:.8em;color:rgba(255,255,255,.8)}
+.gh-r{display:flex;align-items:center;gap:6px}
+.gh-stats{display:flex;gap:5px}
+.gh-s{background:rgba(0,0,0,.3);padding:2px 6px;border-radius:6px;font-size:.72em;color:rgba(255,255,255,.75)}
+.gh-s span{color:var(--gold);font-weight:bold}
+.gh-rank{background:var(--gold);color:var(--blue);padding:2px 8px;border-radius:8px;font-size:.75em;font-weight:bold}
+.gh-gold{background:rgba(212,175,55,.12);border:1px solid rgba(212,175,55,.3);color:var(--gold);padding:2px 7px;border-radius:8px;font-size:.73em;font-weight:bold}
+/* compact lang switcher in header */
+.gh-lang{display:flex;gap:3px}
+.gh-lb{background:rgba(0,0,0,.3);border:1px solid rgba(212,175,55,.2);color:rgba(255,255,255,.5);padding:2px 6px;border-radius:6px;cursor:pointer;font-size:.65em;transition:.15s;white-space:nowrap}
+.gh-lb:hover,.gh-lb.on{background:rgba(212,175,55,.18);border-color:var(--gold);color:var(--gold)}
+.gh-lb.trad-font{font-family:"Noto Serif Mongolian",serif}
+
+.g-body{display:flex;flex:1;overflow:hidden}
+.g-nav{width:148px;background:rgba(5,12,25,.95);border-right:1px solid rgba(212,175,55,.18);display:flex;flex-direction:column;padding:5px 0;flex-shrink:0;overflow-y:auto}
+.nsec{padding:5px 12px 2px;font-size:.6em;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+.nb{background:none;border:none;color:rgba(255,255,255,.65);padding:9px 12px;text-align:left;cursor:pointer;font-size:.83em;transition:.18s;border-left:3px solid transparent;display:flex;align-items:center;gap:7px;width:100%}
+.nb:hover,.nb.on{background:rgba(212,175,55,.09);border-left-color:var(--gold);color:var(--gold)}
+.nb .ni{font-size:.95em;width:15px;text-align:center;flex-shrink:0}
+.g-con{flex:1;overflow-y:auto;padding:14px;scrollbar-width:thin;scrollbar-color:var(--gold) transparent}
+.g-con::-webkit-scrollbar{width:4px}
+.g-con::-webkit-scrollbar-thumb{background:var(--gold);border-radius:4px}
+.pnl{display:none}.pnl.on{display:block}
+.ptitle{font-size:1.05em;color:var(--gold);margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid rgba(212,175,55,.2);display:flex;align-items:center;gap:7px}
+
+/* ── SHARED ── */
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(212,175,55,.18);border-radius:9px;padding:12px;margin:7px 0}
+.card h3{color:var(--gold);font-size:.86em;margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+@media(max-width:480px){.g2{grid-template-columns:1fr}}
+.btn{background:linear-gradient(180deg,var(--gold),var(--dg));color:var(--blue);border:none;padding:7px 14px;border-radius:7px;cursor:pointer;font-weight:bold;font-size:.82em;transition:.18s;display:inline-flex;align-items:center;gap:5px}
+.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 4px 10px rgba(212,175,55,.3)}
+.btn:disabled{opacity:.38;cursor:not-allowed;transform:none}
+.btn-r{background:linear-gradient(180deg,#c0392b,var(--dr));color:#fff}
+.btn-b{background:linear-gradient(180deg,#2471A3,#1a5276);color:#fff}
+.btn-g{background:linear-gradient(180deg,#1E8449,#145a32);color:#fff}
+.btn-sm{padding:5px 10px;font-size:.76em}
+.srow{display:flex;align-items:center;gap:7px;margin:5px 0;font-size:.79em}
+.slbl{width:85px;color:var(--gold);font-size:.84em;flex-shrink:0}
+.sbar{background:rgba(255,255,255,.07);border-radius:5px;height:8px;flex:1;overflow:hidden}
+.sfill{height:100%;border-radius:5px;transition:width .5s}
+.sval{width:22px;text-align:right;font-weight:bold;font-size:.82em}
+.ib{background:rgba(212,175,55,.07);border:1px solid rgba(212,175,55,.25);border-radius:7px;padding:8px 11px;font-size:.78em;color:rgba(255,255,255,.78);line-height:1.6;margin:6px 0}
+.ib.blue{background:rgba(36,113,163,.08);border-color:rgba(36,113,163,.3);color:rgba(200,230,255,.85)}
+.ib.green{background:rgba(30,132,73,.08);border-color:rgba(30,132,73,.3);color:rgba(150,220,150,.9)}
+
+/* ── HOME ── */
+.wrow{display:flex;gap:7px;margin:7px 0}
+.wbox{flex:1;background:rgba(255,255,255,.03);border-radius:6px;padding:7px;text-align:center}
+.wbox .wn{font-size:1.35em;font-weight:bold;color:var(--gold)}
+.wbox .wl{font-size:.65em;color:rgba(255,255,255,.45);margin-top:1px}
+.xp-bar{background:rgba(255,255,255,.07);border-radius:5px;height:8px;overflow:hidden;margin:5px 0}
+.xp-fill{height:100%;background:linear-gradient(90deg,#7d3c98,#a569bd);border-radius:5px;transition:width .6s}
+.rpath{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px;padding:8px 0}
+.rnode{text-align:center}
+.rcirc{width:44px;height:44px;border-radius:50%;border:2px solid rgba(212,175,55,.18);display:flex;align-items:center;justify-content:center;font-size:1.3em;margin:0 auto 3px;transition:.3s}
+.rcirc.a{border-color:var(--gold);background:rgba(212,175,55,.14);box-shadow:0 0 8px rgba(212,175,55,.3)}
+.rcirc.c{border-color:var(--gold);background:rgba(212,175,55,.22);box-shadow:0 0 16px rgba(212,175,55,.5);animation:rp 1.8s infinite}
+@keyframes rp{0%,100%{box-shadow:0 0 14px rgba(212,175,55,.5)}50%{box-shadow:0 0 26px rgba(212,175,55,.85)}}
+.rname{font-size:.6em;color:rgba(212,175,55,.8)}
+.rarrow{color:rgba(212,175,55,.3);font-size:.9em;padding:0 1px}
+.ch-item{background:rgba(255,255,255,.03);border:1px solid rgba(212,175,55,.18);border-radius:7px;padding:9px 10px;margin:5px 0;display:flex;align-items:center;gap:9px}
+.ch-item.done{border-color:rgba(39,174,96,.35);background:rgba(39,174,96,.04)}
+.ch-prog{background:rgba(255,255,255,.07);border-radius:3px;height:4px;margin-top:4px}
+.ch-pf{height:100%;background:linear-gradient(90deg,var(--gold),#f0c040);border-radius:3px;transition:width .3s}
+
+/* ── BATTLE ── */
+#bCanvas{width:100%;max-width:540px;border-radius:9px;border:2px solid rgba(212,175,55,.4);display:block;margin:0 auto 9px;background:#080f1e}
+.bhprow{display:flex;gap:9px;max-width:540px;margin:5px auto}
+.bcp{flex:1}
+.bcn{font-size:.76em;margin-bottom:2px;display:flex;justify-content:space-between}
+.bhb{background:rgba(255,255,255,.07);border-radius:5px;height:12px;overflow:hidden}
+.bhf{height:100%;border-radius:5px;transition:width .4s}
+.p-hp{background:linear-gradient(90deg,#1a5c2a,var(--lg))}
+.e-hp{background:linear-gradient(90deg,var(--dr),#e74c3c)}
+.b-rule{font-size:.74em;color:rgba(255,255,255,.5);text-align:center;max-width:540px;margin:4px auto;min-height:1.2em}
+.tw{max-width:540px;margin:9px auto;display:none}
+.tlbl{text-align:center;font-size:.8em;color:var(--gold);font-weight:bold;margin-bottom:4px}
+.tbar{background:rgba(255,255,255,.07);border:2px solid var(--gold);border-radius:18px;height:28px;position:relative;overflow:hidden;cursor:pointer;user-select:none}
+.tz{position:absolute;top:0;bottom:0;background:rgba(0,220,0,.33)}
+.tc{position:absolute;top:3px;bottom:3px;width:18px;background:var(--gold);border-radius:10px}
+.thint{text-align:center;font-size:.72em;color:rgba(255,255,255,.4);margin-top:3px}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;max-width:540px;margin:7px auto}
+.mb{background:rgba(255,255,255,.04);border:1px solid rgba(212,175,55,.22);color:var(--light);padding:8px;border-radius:7px;cursor:pointer;text-align:left;transition:.18s;font-size:.79em}
+.mb:hover:not(:disabled){background:rgba(212,175,55,.13);border-color:var(--gold)}
+.mb:disabled{opacity:.32;cursor:not-allowed}
+.mb .mn{font-weight:bold;color:var(--gold);display:block;margin-bottom:1px;font-size:.92em}
+.mb .ms{font-size:.72em;color:rgba(255,255,255,.48);display:block;margin-bottom:3px}
+.mb .mst{font-size:.7em;display:flex;gap:7px}
+.mp{color:#e74c3c}.mc2{color:#3498db}
+.blog{max-width:540px;margin:6px auto;background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.05);border-radius:6px;padding:6px 9px;max-height:85px;overflow-y:auto;font-size:.76em;scrollbar-width:thin}
+.le{padding:2px 0;border-bottom:1px solid rgba(255,255,255,.03)}
+.le.s{color:#2ecc71}.le.f{color:#e74c3c}.le.i{color:var(--gold)}.le.e{color:#e67e22}.le.n{color:rgba(255,255,255,.55)}
+.osel{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:7px;max-width:540px;margin:0 auto}
+.ocard{background:rgba(255,255,255,.03);border:1px solid rgba(212,175,55,.18);border-radius:8px;padding:10px;text-align:center;cursor:pointer;transition:.2s}
+.ocard:hover:not(.lk){border-color:var(--gold);background:rgba(212,175,55,.08);transform:translateY(-2px)}
+.ocard.lk{opacity:.35;cursor:not-allowed}
+.oico{font-size:1.7em;margin-bottom:4px}
+.oname{font-size:.82em;font-weight:bold;color:var(--gold);margin-bottom:2px}
+.odesc{font-size:.7em;color:rgba(255,255,255,.5);margin-bottom:4px}
+
+/* ── TRAINING ── */
+.trgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:9px}
+.trcard{background:rgba(255,255,255,.03);border:1px solid rgba(212,175,55,.18);border-radius:9px;padding:13px;text-align:center;cursor:pointer;transition:.22s}
+.trcard:hover:not(.dis){border-color:var(--gold);background:rgba(212,175,55,.07);transform:translateY(-3px)}
+.trcard.dis{opacity:.38;cursor:not-allowed}
+.trico{font-size:1.9em;margin-bottom:6px}
+.trcard h4{color:var(--gold);font-size:.82em;margin-bottom:3px}
+.trcard p{font-size:.72em;color:rgba(255,255,255,.5);margin-bottom:4px}
+.trgain{font-size:.71em;color:var(--lg);font-weight:bold}
+.mga{background:rgba(0,0,0,.28);border:2px solid var(--gold);border-radius:11px;padding:16px;max-width:340px;margin:12px auto;display:none;text-align:center}
+.mga h3{color:var(--gold);font-size:.9em;margin-bottom:5px}
+.mga p{font-size:.79em;color:rgba(255,255,255,.68);margin-bottom:9px}
+.mga-bar{background:rgba(255,255,255,.07);border:1px solid var(--gold);border-radius:12px;height:18px;overflow:hidden;max-width:260px;margin:7px auto}
+.mga-fill{height:100%;background:linear-gradient(90deg,var(--gold),#f0c040);border-radius:12px;width:0;transition:width .08s}
+.mga-tim{font-size:.83em;color:var(--gold);margin:4px 0;font-weight:bold}
+.mga-hint{font-size:.73em;color:rgba(255,255,255,.4);margin-bottom:7px}
+
+/* ── TOURNAMENT ── */
+.tlvl{background:rgba(255,255,255,.03);border:1px solid rgba(212,175,55,.18);border-radius:9px;padding:12px;margin:7px 0}
+.tlvl h3{color:var(--gold);font-size:.87em;margin-bottom:7px}
+.tmatch{background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.06);border-radius:6px;padding:7px 10px;display:flex;align-items:center;gap:7px;margin:4px 0;font-size:.79em}
+.tmatch.ac{border-color:var(--gold);background:rgba(212,175,55,.06)}
+.tvs{color:var(--gold);font-weight:bold;margin:0 4px}
+.tw2{color:var(--lg);font-weight:bold}.tl2{color:#e74c3c;font-weight:bold}.tbd{color:rgba(255,255,255,.35)}
+
+/* ── SHOP ── */
+.shgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:9px}
+.shcard{background:rgba(255,255,255,.03);border:1px solid rgba(212,175,55,.18);border-radius:9px;padding:12px;text-align:center;transition:.2s}
+.shcard:hover{border-color:rgba(212,175,55,.4);background:rgba(212,175,55,.05)}
+.shcard.own{border-color:rgba(39,174,96,.35);background:rgba(39,174,96,.03)}
+.shico{font-size:2em;margin-bottom:5px}
+.shname{font-size:.82em;font-weight:bold;color:var(--gold);margin-bottom:2px}
+.shdesc{font-size:.7em;color:rgba(255,255,255,.5);margin-bottom:4px}
+.shbon{font-size:.7em;color:var(--lg);margin-bottom:5px;font-weight:bold}
+.gdisplay{background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.3);border-radius:7px;padding:5px 11px;font-size:.82em;color:var(--gold);font-weight:bold;display:inline-flex;align-items:center;gap:5px;margin-bottom:10px}
+
+/* ── ACHIEVEMENTS ── */
+.achgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:9px}
+.achcard{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:9px;padding:11px;text-align:center;transition:.2s}
+.achcard.u{border-color:rgba(212,175,55,.45);background:rgba(212,175,55,.06)}
+.achcard.lk{opacity:.4;filter:grayscale(.7)}
+.achico{font-size:1.9em;margin-bottom:4px}
+.achname{font-size:.78em;font-weight:bold;color:var(--gold);margin-bottom:2px}
+.achdesc{font-size:.7em;color:rgba(255,255,255,.5)}
+
+/* ── MUSEUM ── */
+.musgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:9px}
+.muscard{background:rgba(255,255,255,.03);border:1px solid rgba(212,175,55,.18);border-radius:9px;padding:12px;transition:.2s}
+.muscard.u{border-color:rgba(212,175,55,.45)}
+.muscard.lk{opacity:.36;filter:grayscale(.8)}
+.musico{font-size:2.1em;text-align:center;margin-bottom:6px}
+.muscard h4{color:var(--gold);font-size:.83em;margin-bottom:3px}
+.muscard p{font-size:.74em;color:rgba(255,255,255,.62);line-height:1.5}
+.musstats{margin-top:6px;display:flex;gap:7px;font-size:.68em}
+.musstats span{background:rgba(0,0,0,.2);padding:2px 6px;border-radius:5px}
+
+/* ── CULTURE ── */
+.qopt{background:rgba(255,255,255,.03);border:1px solid rgba(212,175,55,.2);border-radius:7px;padding:9px;margin:5px 0;cursor:pointer;font-size:.82em;transition:.18s}
+.qopt:hover{background:rgba(212,175,55,.1);border-color:var(--gold)}
+.qopt.cor{background:rgba(30,132,73,.22);border-color:#27ae60}
+.qopt.wrg{background:rgba(176,58,46,.22);border-color:var(--red)}
+.cos-item{display:flex;align-items:center;gap:9px;padding:7px 9px;border-radius:7px;cursor:pointer;margin:4px 0;border:1px solid rgba(255,255,255,.07);transition:.2s}
+.cos-item:hover{background:rgba(212,175,55,.07)}
+.cos-item.on{background:rgba(212,175,55,.12);border-color:rgba(212,175,55,.4)}
+
+/* ── MODAL ── */
+.mov{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:500}
+.mov.on{display:flex}
+.mbox{background:linear-gradient(180deg,#0d2240,#07101e);border:2px solid var(--gold);border-radius:13px;padding:20px;max-width:380px;width:90%;text-align:center}
+.mbox h2{color:var(--gold);font-size:1.1em;margin-bottom:8px}
+.m-ico{font-size:3.2em;margin:8px 0}
+.mbox p{font-size:.82em;color:rgba(255,255,255,.8);margin:5px 0;line-height:1.6}
+.m-btns{display:flex;gap:7px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+/* unlock */
+.uov{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:600;text-align:center;padding:20px}
+.uov.on{display:flex}
+.u-ico{font-size:5em;animation:uSpin .7s cubic-bezier(.175,.885,.32,1.275)}
+@keyframes uSpin{from{transform:scale(0) rotate(-180deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+.u-title{color:var(--gold);font-size:1.35em;font-weight:bold;margin:8px 0 4px}
+.u-desc{color:rgba(255,255,255,.78);font-size:.86em;max-width:300px;line-height:1.6}
+/* float dmg */
+.fdmg{position:fixed;pointer-events:none;font-weight:bold;font-size:1.2em;text-shadow:0 2px 5px #000;animation:fUp 1.3s ease forwards;z-index:400}
+@keyframes fUp{0%{opacity:1;transform:translateY(0)}50%{transform:translateY(-32px)}100%{opacity:0;transform:translateY(-62px)}}
+
+/* ══ MOBILE ══ */
+@media(max-width:620px){
+  /* Start screen */
+  .s-title{font-size:clamp(1.7em,7vw,2.6em)!important}
+  .s-sub{font-size:.85em}
+  .s-emblem{font-size:3.2em}
+  .s-menu{width:min(320px,92vw)}
+  .s-mbtn{padding:15px 18px;font-size:.97em;border-radius:12px}
+  .lp-btn{padding:9px 14px;font-size:.82em}
+  .lang-pick{gap:6px}
+
+  /* Header compact */
+  .g-hdr{padding:5px 10px}
+  .gh-logo{font-size:.78em}
+  .gh-name{font-size:.72em}
+  .gh-stats{gap:3px}
+  .gh-s{padding:2px 4px;font-size:.65em}
+  .gh-lang{display:none} /* lang in settings panel instead */
+  .gh-rank{font-size:.68em;padding:2px 6px}
+  .gh-gold{font-size:.67em;padding:2px 5px}
+
+  /* Bottom nav */
+  .g-body{flex-direction:column-reverse;overflow:visible}
+  .g-nav{
+    width:100%;height:auto;
+    flex-direction:row;overflow-x:auto;overflow-y:hidden;
+    border-right:none;border-top:2px solid rgba(212,175,55,.25);
+    padding:0;flex-shrink:0;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;position:relative;
+    background:rgba(4,10,22,.98);
+    z-index:50;
+  }
+  .g-nav::-webkit-scrollbar{display:none}
+  .nb{
+    flex-direction:column;padding:7px 6px 5px;
+    font-size:.58em;border-left:none;
+    border-top:2.5px solid transparent;
+    min-width:54px;flex:1;justify-content:center;
+    align-items:center;gap:2px;white-space:nowrap;
+    letter-spacing:0;
+  }
+  .nb.on{background:rgba(212,175,55,.1);border-left-color:transparent;border-top-color:var(--gold);color:var(--gold)}
+  .nb .ni{width:auto;font-size:1.5em;display:block}
+  .g-con{
+    flex:1;overflow-y:auto;padding:11px 11px;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  /* Content */
+  .ptitle{font-size:.95em}
+  .card{padding:10px}
+  .g2{grid-template-columns:1fr}
+
+  /* Battle */
+  #bCanvas{height:100px}
+  .bhprow{gap:6px}
+  .bcn{font-size:.7em}
+  .bhb{height:10px}
+  .mgrid{grid-template-columns:1fr 1fr;gap:5px}
+  .mb{padding:9px 7px}
+  .mb .mn{font-size:.85em}
+  .mb .mst{font-size:.67em}
+  .blog{max-height:65px;font-size:.72em}
+  /* bigger timing bar for thumbs */
+  .tbar{height:46px;border-radius:23px}
+  .tc{width:30px;top:5px;bottom:5px;border-radius:15px}
+  .tz{border-radius:23px}
+  .tw{margin:6px auto}
+
+  /* Training */
+  .trgrid{grid-template-columns:1fr 1fr}
+  .trcard{padding:12px 8px}
+  .trico{font-size:1.6em}
+  .trcard h4{font-size:.78em}
+  .trcard p{font-size:.68em}
+  .mga{padding:13px}
+  .mga-bar{height:22px;cursor:pointer}
+  .mga-fill{border-radius:22px}
+
+  /* Shop */
+  .shgrid{grid-template-columns:1fr 1fr;gap:7px}
+  .shcard{padding:9px}
+  .shico{font-size:1.6em}
+  .shname{font-size:.76em}
+  .shdesc{font-size:.66em}
+
+  /* Achievements */
+  .achgrid{grid-template-columns:1fr 1fr 1fr}
+  .achcard{padding:8px}
+  .achico{font-size:1.5em}
+  .achname{font-size:.7em}
+
+  /* Museum */
+  .musgrid{grid-template-columns:1fr 1fr}
+  .muscard{padding:9px}
+  .musico{font-size:1.7em}
+
+  /* Opponents */
+  .osel{grid-template-columns:1fr 1fr;gap:6px}
+  .ocard{padding:9px 7px}
+  .oico{font-size:1.4em}
+  .oname{font-size:.76em}
+  .odesc{font-size:.65em}
+
+  /* Tournament */
+  .tlvl{padding:9px}
+  .tmatch{padding:6px 8px}
+
+  /* Rank path */
+  .rcirc{width:36px;height:36px;font-size:1.1em}
+  .rname{font-size:.55em}
+  .rarrow{font-size:.75em}
+
+  /* Buttons */
+  .btn{padding:9px 14px;font-size:.82em;min-height:40px}
+  .btn-sm{padding:8px 12px;font-size:.78em}
+
+  /* Sub screens */
+  .sub-wrap{padding:14px 12px}
+  .sub-card{padding:11px}
+  .sub-card p,.sub-card li{font-size:.79em}
+
+  /* New game */
+  .ng-box{padding:20px 16px}
+  .ng-input{font-size:.95em;padding:12px 14px}
+  .ng-pre{padding:7px 13px;font-size:.8em}
+
+  /* Modal */
+  .mbox{padding:16px;width:94%}
+  .mbox h2{font-size:1em}
+  .mbox p{font-size:.8em}
+  .m-btns{gap:6px}
+
+  /* Quiz */
+  .qopt{padding:11px;font-size:.8em;min-height:44px}
+
+  /* Wrow */
+  .wrow{gap:5px}
+  .wbox{padding:6px 4px}
+  .wbox .wn{font-size:1.15em}
+  .wbox .wl{font-size:.58em}
+}
+
+@media(max-width:380px){
+  .nb{min-width:44px;font-size:.52em}
+  .nb .ni{font-size:1.35em}
+  .trgrid{grid-template-columns:1fr 1fr}
+  .shgrid{grid-template-columns:1fr}
+  .achgrid{grid-template-columns:1fr 1fr}
+  .musgrid{grid-template-columns:1fr}
+  .osel{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
 <body>
 
-    <div class="container" id="container">
-        <div class="form-container sign-up">
-            <form>
-                <h1>Create Account</h1>
-                <div class="social-icons">
-                    <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
-                    <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
-                    <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
-                </div>
-                <span>or use your email for registeration</span>
-                <input type="text" placeholder="Name">
-                <input type="email" placeholder="Email">
-                <input type="password" placeholder="Password">
-                <button>Sign Up</button>
-            </form>
-        </div>
-        <div class="form-container sign-in">
-            <form>
-                <h1>Sign In</h1>
-                <div class="social-icons">
-                    <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
-                    <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
-                    <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
-                </div>
-                <span>or use your email password</span>
-                <input type="email" placeholder="Email">
-                <input type="password" placeholder="Password">
-                <a href="#">Forget Your Password?</a>
-                <button>Sign In</button>
-            </form>
-        </div>
-        <div class="toggle-container">
-            <div class="toggle">
-                <div class="toggle-panel toggle-left">
-                    <h1>Welcome Back!</h1>
-                    <p>Enter your personal details to use all of site features</p>
-                    <button class="hidden" id="login">Sign In</button>
-                </div>
-                <div class="toggle-panel toggle-right">
-                    <h1>Hello, Friend!</h1>
-                    <p>Register with your personal details to use all of site features</p>
-                    <button class="hidden" id="register">Sign Up</button>
-                </div>
-            </div>
-        </div>
+<!-- ═══ START ═══ -->
+<div class="scr on" id="s-start">
+  <div class="start-deco"><div class="start-orb orb1"></div><div class="start-orb orb2"></div></div>
+  <div class="start-inner">
+    <div class="s-emblem">🏆</div>
+    <div class="s-title" id="sTitle">ДЭВЖЭЭ</div>
+    <div class="s-sub" id="sSub">АВАРГЫН ЗАМ</div>
+    <div class="s-tagline" id="sTag">Монгол үндэсний бөхийн карьер тоглоом</div>
+    <div class="lang-pick">
+      <button class="lp-btn on" id="lp-mn"  onclick="setLang('mn')">🇲🇳 Монгол</button>
+      <button class="lp-btn"    id="lp-en"  onclick="setLang('en')">🇬🇧 English</button>
+      <button class="lp-btn trad-font" id="lp-tr" onclick="setLang('tr')">ᠪᠢᠴᠢᠭ᠌</button>
     </div>
+    <div class="s-menu" id="sMenu"></div>
+    <div class="s-ver">v2.0 — Монгол соёлын тоглоом</div>
+  </div>
+</div>
 
-    <script src="script.js"></script>
+<!-- ═══ HOW TO PLAY ═══ -->
+<div class="scr sub-scr" id="s-htp">
+  <div class="sub-wrap" id="htpWrap"></div>
+</div>
+
+<!-- ═══ ABOUT ═══ -->
+<div class="scr sub-scr" id="s-about">
+  <div class="sub-wrap" id="aboutWrap"></div>
+</div>
+
+<!-- ═══ NEW GAME ═══ -->
+<div class="scr" id="s-ng">
+  <div class="ng-box">
+    <div style="font-size:2.8em;margin-bottom:7px">🥋</div>
+    <h2 id="ngTitle">Бөхчний нэр</h2>
+    <p class="ng-sub" id="ngSub">Карьерийн эхлэл. Чиний бөхийн нэрийг оруул!</p>
+    <input class="ng-input" id="nameIn" maxlength="16" placeholder="Нэрээ бич...">
+    <div id="ngPresets" class="ng-presets"></div>
+    <button class="btn" style="width:100%;justify-content:center;padding:11px" id="ngStartBtn" onclick="doStart()">🏆 Карьер эхлэх!</button>
+    <button class="sub-back" style="margin-top:8px;width:100%;justify-content:center" onclick="goScr('s-start')" id="ngBackBtn">← Буцах</button>
+  </div>
+</div>
+
+<!-- ═══ GAME ═══ -->
+<div class="scr" id="s-game">
+  <div class="g-hdr">
+    <div class="gh-l">
+      <span style="font-size:1em">🏆</span>
+      <div><div class="gh-logo" id="ghLogo">ДЭВЖЭЭ</div><div class="gh-name" id="ghName">—</div></div>
+    </div>
+    <div class="gh-r">
+      <div class="gh-stats">
+        <div class="gh-s" id="hStr">💪<span>10</span></div>
+        <div class="gh-s" id="hSpd">⚡<span>10</span></div>
+        <div class="gh-s" id="hBal">⚖️<span>10</span></div>
+        <div class="gh-s" id="hEnd">❤️<span>10</span></div>
+      </div>
+      <div class="gh-rank" id="hRank">🦅</div>
+      <div class="gh-gold">🪙<span id="hGold">0</span></div>
+      <div class="gh-lang">
+        <button class="gh-lb on" id="gl-mn" onclick="setLang('mn')">МН</button>
+        <button class="gh-lb"    id="gl-en" onclick="setLang('en')">EN</button>
+        <button class="gh-lb trad-font" id="gl-tr" onclick="setLang('tr')">ᠪᠢᠴᠢᠭ᠌</button>
+      </div>
+    </div>
+  </div>
+  <div class="g-body">
+    <nav class="g-nav" id="gNav"></nav>
+    <div class="g-con">
+      <div class="pnl on" id="p-home"></div>
+      <div class="pnl" id="p-battle"></div>
+      <div class="pnl" id="p-train"></div>
+      <div class="pnl" id="p-tour"></div>
+      <div class="pnl" id="p-shop"></div>
+      <div class="pnl" id="p-ach"></div>
+      <div class="pnl" id="p-mus"></div>
+      <div class="pnl" id="p-cult"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="mov" id="modal"><div class="mbox"><h2 id="mT"></h2><div class="m-ico" id="mI"></div><p id="mP"></p><div id="mX"></div><div class="m-btns" id="mB"></div></div></div>
+<!-- UNLOCK -->
+<div class="uov" id="uov"><div class="u-ico" id="uI"></div><div class="u-title" id="uT"></div><div class="u-desc" id="uD"></div><button class="btn" style="margin-top:14px" id="uBtn"></button></div>
+
+<script>
+
+// ══════════════════════════════════════════════════
+//  TRANSLATIONS  (mn = Монгол | en = English | tr = Тод бичиг)
+// ══════════════════════════════════════════════════
+const S = {
+mn:{
+  gameTitle:'ДЭВЖЭЭ', gameSub:'АВАРГЫН ЗАМ',
+  tagline:'Монгол үндэсний бөхийн карьер тоглоом',
+  btnPlay:'▶  ТОГЛОХ', btnHtp:'📖  Хэрхэн тоглох', btnAbout:'🏛️  Монгол бөх',
+  htpTitle:'📖 Хэрхэн тоглох вэ?',
+  htpIntro:'Сумын начнаас эхлэн улсын аварга хүртэл өсөж барилда!',
+  htpGoal:'🎯 Зорилго',htpGoalTxt:'XP хуримтлуулж цол ахиул. Начин → Харцага → Заан → Гарьд → Арслан → Аварга.',
+  htpBattle:'⚔️ Барилдаан',htpBatTxt:'Мэх сонгоод, timing bar дахь ногоон хэсэгт хүрэхэд SPACE эсвээр дарна.',
+  htpTrain:'💪 Дасгал',htpTrainTxt:'Өдөр бүр 4 дасгал хийж чанараа нэмэгдүүл.',
+  htpRanks:'🥋 Цол',htpRanksTxt:'XP хуримтлуулж автоматаар цол ахина.',
+  htpShop:'🛒 Дэлгүүр',htpShopTxt:'Алтаар тоног хэрэглэл авч чанараа нэмэгдүүл.',
+  aboutTitle:'🏛️ Монгол Үндэсний Бөх',
+  aboutIntro:'7000 жилийн түүхтэй дэлхийн хамгийн эртний тулаанч урлагуудын нэг.',
+  aH:'📜 Түүх',aHt:'Монгол бөх манай эриний өмнөөс уламжлагдан ирсэн. Чингис хааны үед цэргийн бэлтгэлийн нэг хэсэг байсан. Монголын үндэсний наадамд бөх нь морин уяа, сурын харваатай хамт "Эрийн гурван наадам"-ын нэг болдог.',
+  aR:'📏 Дүрэм',aRt:'Өвдөг, тохой, нуруу, толгой — биеийн аль ч хэсэг газарт хүрэхгүй байна. Хугацааны хязгаар байхгүй. Нэг нь унтал тэмцээн дуусна.',
+  aDev:'🦅 Дэвэх',aDevt:'Барилдааны өмнө болон дараа бөх бүргэд шиг гараа дэлгэж дэвдэг ёслол хийдэг.',
+  aZ:'🎽 Хувцас',aZt:'Зодог (дээд хувцас), шуудаг (богино өмд), гутул (уламжлалт гутал).',
+  ngTitle:'Бөхчний нэр', ngSub:'Карьерийн эхлэл. Чиний нэрийг оруул!',
+  ngStart:'🏆 Карьер эхлэх!', btnBack:'← Буцах', btnPlayNow:'▶ Тоглох!',
+  navHome:'Нүүр',navBattle:'Барилдаан',navTrain:'Дасгал',navTour:'Наадам',
+  navShop:'Дэлгүүр',navAch:'Амжилт',navMus:'Мэх Музей',navCult:'Соёл & Тест',
+  navExit:'Гарах',
+  ptHome:'🏠 Миний Бөхчин',ptBattle:'⚔️ Барилдаан',ptTrain:'💪 Дасгалжуулалт',
+  ptTour:'🏅 Наадам',ptShop:'🛒 Дэлгүүр',ptAch:'🏆 Амжилтууд',
+  ptMus:'📚 Мэхийн Музей',ptCult:'🏛️ Монгол Соёл',
+  statStr:'🗡️ Хүч',statSpd:'⚡ Хурд',statBal:'⚖️ Тэнцвэр',statEnd:'❤️ Тэсвэр',
+  xpLabel:'XP Дэвшил',dayLabel:'Өдөр',winLabel:'Ялалт',loseLabel:'Ялагдал',
+  todayStatus:'📋 Өнөөдрийн байдал',trainDoneOf:'дасгал хийсэн',
+  battleDoneY:'✅ Хийсэн',battleDoneN:'Хийгдээгүй',
+  dailyCh:'🎯 Өдрийн даалгавар',
+  btnNewDay:'🌅 Шинэ өдөр',btnBattle:'⚔️ Барилдах',
+  rankPath:'🥋 Цолны замнал',
+  statsCard:'📊 Чанарууд',statsCard2:'📈 Статистик',
+  ranks:['Начин','Харцага','Заан','Гарьд','Арслан','Аварга'],
+  rankXps:[0,100,250,500,900,1500],
+  moves:[
+    {n:'Хутгах',s:'Хөлийг хутгах',d:'Хөлийг хурдан хутгаж тэнцвэрийг алдуулна. Эхлэгчдийн үндсэн мэх.',ico:'🦵',p:18,c:10,r:0,h:.68,z:.34},
+    {n:'Хамах',s:'Гараар хамах',d:'Хоёр гараараа хамаад хүч шахаж дарна.',ico:'💪',p:22,c:13,r:0,h:.62,z:.3},
+    {n:'Суйлах',s:'Хөлийн мэх',d:'Хурдан хөлний хөдөлгөөнөөр тэнцвэрийг алдуулна.',ico:'🌀',p:27,c:15,r:1,h:.58,z:.27},
+    {n:'Шуурах',s:'Хурдан довтлох',d:'Гэнэтийн хурдан хөдөлгөөнөөр дайрч тэнцвэрийг алдуулна.',ico:'💨',p:24,c:12,r:1,h:.63,z:.31},
+    {n:'Мордох',s:'Дээрээс дарах',d:'Биеийн жингийг ашиглан дээрээс хүчтэй дарж унагана.',ico:'⬇️',p:34,c:22,r:2,h:.5,z:.24},
+    {n:'Давуурлах',s:'Эргэж дайрах',d:'Хурдан эргэлтийн хөдөлгөөнөөр хажуугаас дайрч алдуулна.',ico:'🔄',p:29,c:18,r:2,h:.55,z:.27},
+    {n:'Дэвэх',s:'Бүргэд дэвэх',d:'Бүргэд шиг үсрэн дайрах аварга мэх.',ico:'🦅',p:40,c:26,r:3,h:.45,z:.21},
+    {n:'Хазайруулах',s:'Татаж алдуулах',d:'Өрсөлдөгчийн хөдөлгөөнийг хажуу тийш чиглүүлж алдуулна.',ico:'↩️',p:31,c:19,r:3,h:.53,z:.26}
+  ],
+  opps:[
+    {n:'Мэргэн',ico:'🤼',d:'Сумын шинэ бөх',rank:0,str:8,spd:7,bal:7,end:8,hp:75,gold:12,xp:20,diff:'🟢 Хялбар'},
+    {n:'Батаа',ico:'🤼',d:'Сумын дундаж бөх',rank:0,str:10,spd:9,bal:9,end:10,hp:90,gold:18,xp:28,diff:'🟢 Хялбар'},
+    {n:'Ганболд',ico:'🤼',d:'Сумын хүчтэй бөх',rank:0,str:13,spd:11,bal:10,end:12,hp:105,gold:25,xp:38,diff:'🟡 Дунд'},
+    {n:'Дорж',ico:'🤼‍♂️',d:'Аймгийн начин',rank:1,str:15,spd:13,bal:13,end:14,hp:118,gold:35,xp:50,diff:'🟡 Дунд'},
+    {n:'Энхбаяр',ico:'🤼‍♂️',d:'Аймгийн харцага',rank:1,str:17,spd:16,bal:15,end:16,hp:132,gold:45,xp:65,diff:'🟡 Дунд'},
+    {n:'Гантулга',ico:'🤼‍♂️',d:'Аймгийн заан',rank:2,str:20,spd:18,bal:17,end:19,hp:150,gold:58,xp:85,diff:'🔴 Хэцүү'},
+    {n:'Тэмүүжин',ico:'🏋️',d:'Улсын гарьд',rank:2,str:24,spd:21,bal:20,end:22,hp:170,gold:75,xp:110,diff:'🔴 Хэцүү'},
+    {n:'Баяр-Аварга',ico:'👑',d:'Улсын аварга',rank:3,str:29,spd:26,bal:25,end:27,hp:200,gold:120,xp:160,diff:'🔴 Маш хэцүү'}
+  ],
+  shopItems:[
+    {id:0,n:'Ердийн Зодог',ico:'🎽',d:'Уламжлалт улаан зодог',b:'Тусгай чанар байхгүй',st:null,v:0,p:0,own:true},
+    {id:1,n:'Хурдны Зодог',ico:'✨',d:'Хөнгөн материалаар хийсэн',b:'⚡ Хурд +3',st:'spd',v:3,p:50,own:false},
+    {id:2,n:'Хүчний Зодог',ico:'🔴',d:'Хүнд, бат даасан зодог',b:'🗡️ Хүч +3',st:'str',v:3,p:50,own:false},
+    {id:3,n:'Аваргын Зодог',ico:'👑',d:'Алтан хэвлэмэлтэй',b:'Бүх чанар +2',st:'all',v:2,p:120,own:false},
+    {id:4,n:'Уламжлалт Гутул',ico:'👢',d:'Монгол гутал',b:'⚖️ Тэнцвэр +3',st:'bal',v:3,p:40,own:false},
+    {id:5,n:'Тэсвэрийн Шуудаг',ico:'🩲',d:'Тусгай нэхэлтэй',b:'❤️ Тэсвэр +3',st:'end',v:3,p:40,own:false}
+  ],
+  achs:[
+    {id:'w1',n:'Анхны Ялалт',ico:'⭐',d:'Эхний барилдааныг ялах'},
+    {id:'w5',n:'5 Ялалт',ico:'🥉',d:'5 барилдаан ялах'},
+    {id:'w20',n:'20 Ялалт',ico:'🥈',d:'20 барилдаан ялах'},
+    {id:'r1',n:'Харцага',ico:'🦆',d:'Харцага цол авах'},
+    {id:'r3',n:'Гарьд',ico:'🦅',d:'Гарьд цол авах'},
+    {id:'r5',n:'Аварга',ico:'👑',d:'Аварга цол авах'},
+    {id:'t10',n:'Дасгалч',ico:'💪',d:'10 дасгал хийх'},
+    {id:'m4',n:'Мэхжин',ico:'🌀',d:'4 мэх сурах'},
+    {id:'g100',n:'Баян Бөхчин',ico:'🪙',d:'100 алт олох'},
+    {id:'n1',n:'Наадамч',ico:'🏟️',d:'Наадамд тэргүүлэх'}
+  ],
+  costumes:[
+    {n:'Уламжлалт Улаан',ico:'🎽',d:'Монгол уламжлалт улаан зодог'},
+    {n:'Хөх Тэнгэр',ico:'💙',d:'Тэнгэрийн цэнхэр зодог'},
+    {n:'Алтан Аварга',ico:'👑',d:'Алтан хэвлэмэлтэй зодог'}
+  ],
+  quiz:[
+    {q:'Монголын Наадам хэдэн сарын хэдэнд болдог вэ?',opts:['6-р сарын 1','7-р сарын 11','8-р сарын 8','5-р сарын 15'],a:1,e:'Монголын үндэсний наадам жил бүр 7-р сарын 11-13-нд болдог.'},
+    {q:'Бөхийн хамгийн дээд цол аль нь вэ?',opts:['Арслан','Аварга','Гарьд','Заан'],a:1,e:'Аварга — улсын наадмын хамгийн дээд цол.'},
+    {q:'Монгол бөхд ялагдах нөхцөл юу вэ?',opts:['Цаг дуусах','Биеийн хэсэг газарт хүрэх','Гурав алдах','Сул харагдах'],a:1,e:'Өвдөг, тохой, нуруу, толгой газарт хүрэхэд ялагдана.'},
+    {q:"'Суйлах' мэх юу вэ?",opts:['Дээрээс дарах','Хөлөөр тэнцвэр алдуулах','Гараар хамах','Буцаж давших'],a:1,e:'Суйлах — хурдан хөлний хөдөлгөөнөөр тэнцвэрийг алдуулна.'},
+    {q:'Монголын Наадамд ямар 3 тоглоом ордог вэ?',opts:['Бөх, Хөл бөмбөг, Шагай','Бөх, Сур харваа, Морин уяа','Бөх, Сагсан бөмбөг, Сур','Шатар, Бөх, Уяа'],a:1,e:'Монголын наадмын гурван тоглоом: Бөх, Сур харваа, Морин уяа.'},
+    {q:"'Дэвэх' гэж юу вэ?",opts:['Мэхний нэр','Цолны нэр','Барилдааны өмнөх ёслол','Дэвжээний нэр'],a:2,e:'Дэвэх — барилдааны өмнө болон дараа бүргэд шиг гараа дэлгэж хийдэг ёслол.'}
+  ],
+  // battle UI text
+  oppSelectTitle:'Өрсөлдөгч сонгоорой:',
+  oppLocked:'🔒 Цол шаардлагатай',
+  bRuleSelect:'⚡ Доороос мэх сонгоорой!',
+  bRuleTiming:'🎯 Ногоон хэсэгт хүрэхэд SPACE дар!',
+  bRuleEnemy:'🤼 %s эргэж довтолж байна...',
+  bRulePlayer:'⚡ Таны ээлж — мэх сонгоорой!',
+  bStart:'🏁 %s-тэй барилдаан эхэллээ!',
+  bTip:'💡 Мэх сонгоод timing bar ногоон хэсэгт SPACE дарна уу!',
+  bPerfect:'✨ Төгс мөч!', bNoStam:'⚡ Стамина хүрэхгүй!',
+  bHit:'✅ %s — %s-д %d хохирол!',
+  bMiss:'❌ %s мэх ороогүй...',
+  bEHit:'%s %s: %s — %d хохирол!',
+  bEMiss:'%s %s: %s мэх ороогүй',
+  bWin:'🏆 Ялалт!',bLose:'💔 Ялагдал',
+  bWinMsg:'%s-г ялсан!',bLoseMsg:'%s илүү хүчтэй байв.',
+  bAgain:'Дахин барилдах',bHome:'Нүүр',
+  bGoTrain:'💪 Дасгалд очих',bRetry:'Дахин оролдох',
+  bTimingHint:'SPACE товч эсвэл дэлгэцийг товших',
+  // training
+  trTitle:'📋 Өнөөдөр %d/4 дасгал хийсэн.',
+  trTypes:[
+    {id:'str',n:'Чулуу өргөх',ico:'🏋️',d:'20 удаа Click!',g:'🗡️ Хүч +2',stat:'str',k:'click',tgt:20},
+    {id:'spd',n:'Гүйлт',ico:'🏃',d:'3с-д аль болох олон SPACE дар!',g:'⚡ Хурд +2',stat:'spd',k:'spam',tgt:25},
+    {id:'bal',n:'Тэнцвэр',ico:'🧘',d:'SPACE 3 секунд барь!',g:'⚖️ Тэнцвэр +2',stat:'bal',k:'hold',tgt:3},
+    {id:'end',n:'Уяа',ico:'🐎',d:'30 удаа SPACE/X дар!',g:'❤️ Тэсвэр +2',stat:'end',k:'spam',tgt:30}
+  ],
+  trDone:'✅ Хийгдсэн',trFinish:'💪 Дасгал дууссан!',trGain:'+12 XP',
+  mgStart:'🚀 Эхлэх',mgCancel:'✕ Болих',mgClick:'👆 Дар!',
+  // tournament
+  tourLevels:[
+    {n:'Сумын Наадам',ico:'🏘️',ops:[0,1,2],xp:60,gold:40,rnk:0},
+    {n:'Аймгийн Наадам',ico:'🏙️',ops:[3,4,5],xp:120,gold:80,rnk:1},
+    {n:'Улсын Наадам',ico:'🏛️',ops:[6,7],xp:250,gold:150,rnk:3}
+  ],
+  tourLocked:'🔒 %s цол шаардлагатай',
+  tourDone:'✅ Наадам амжилттай дуусгасан!',
+  tourEnter:'🏅 Наадамд бүртгүүлэх',
+  tourFight:'⚔️ %s-тэй барилдах',
+  tourRoundWon:'%s-г ялсан! Дараагийн давааг давцгаая.',
+  tourWon:'%s Наадамд тэргүүллэв!',
+  tourLost:'%s илүү хүчтэй байв.',
+  continueBtn:'Үргэлжлүүлэх',
+  // shop
+  shopGold:'Алт',ownedBadge:'✅ Эзэмшиж байна',buyBtn:'Худалдаж авах',buyDone:'Амжилттай!',
+  // achievements
+  achLocked:'Нуугдсан амжилт',
+  // culture
+  cosTitle:'🎽 Зодог сонгох',devTitle:'🦅 Дэвэх ёслол',
+  devText:'Барилдааны өмнө болон дараа бөх гараа бүргэд шиг дэлгэж дэвдэг — хүндэтгэлийн тэмдэг.\n\nЗасгач бөхийн зодгийн уяасыг тойрч ороолт уядаг.',
+  quizTitle:'❓ Мэдлэгийн Тест',
+  quizScore:'Асуулт %d/%d · Оноо: %d',
+  quizDone:'Тест дууссан!',quizScore2:'Оноо: %d/%d',
+  quizRetry:'Дахин өгөх',quizNext:'Дараагийн →',
+  // modals
+  welcomeTitle:'Тавтай морил! 🎉',
+  welcomeMsg:'карьер эхэллээ!\n📌 Эхлээд Дасгал хийгээд Барилдаан-д ор.\n📌 Начин цолоос эхэлнэ ✊',
+  gotIt:'Ойлголоо!',
+  newDayTitle:'🌅 Шинэ өдөр',
+  newDayMsg:'Өдөр %d эхэллээ! Стамина сэргэлээ.',
+  rankUpTitle:'Шинэ цол! %s',rankUpMsg:'Баяр хүргэе! Та шинэ цолтой боллоо!',
+  moveTitle:'Шинэ мэх: %s',
+  achTitle:'Амжилт: %s',
+  challengeDone:'🎯 Даалгавар биелэв!',challengeMsg:'+%dXP +%d🪙',
+  presets:['Баатар','Мөнх','Эрдэнэ','Чингис','Буянт'],
+  challengeList:[
+    {ico:'⚔️',t:'Барилдаан',d:'1 барилдаан ялах',type:'win',n:1,xp:20,gold:10},
+    {ico:'💪',t:'Дасгалч',d:'3 дасгал хийх',type:'train',n:3,xp:15,gold:8},
+    {ico:'🏅',t:'Бэлтгэл',d:'Дасгал бүрийг хий',type:'train',n:4,xp:25,gold:15},
+    {ico:'⚔️',t:'Хоёр ялалт',d:'2 барилдаан ялах',type:'win',n:2,xp:30,gold:20}
+  ],
+  historyTitle:'📖 Бөхийн түүх',
+  historyText:'Монгол бөх нь манай эриний өмнөөс уламжлагдан ирсэн. Чингис хааны үед цэргийн бэлтгэлийн нэг хэсэг байсан.\n\nНаадам жил бүр 7-р сарын 11-13-нд болдог. Бөх, Сур харваа, Морин уяа — эрийн гурван наадам.'
+},
+
+en:{
+  gameTitle:'DEVJEE', gameSub:"CHAMPION'S PATH",
+  tagline:'Mongolian national wrestling career game',
+  btnPlay:'▶  PLAY', btnHtp:'📖  How to Play', btnAbout:'🏛️  Mongolian Wrestling',
+  htpTitle:'📖 How to Play?',
+  htpIntro:'Rise from local Falcon to national Champion!',
+  htpGoal:'🎯 Goal',htpGoalTxt:'Earn XP and advance ranks: Falcon → Hawk → Elephant → Garuda → Lion → Champion.',
+  htpBattle:'⚔️ Battle',htpBatTxt:'Choose a move, then press SPACE when the bar enters the green zone.',
+  htpTrain:'💪 Training',htpTrainTxt:'Complete 4 daily training sessions to boost your stats.',
+  htpRanks:'🥋 Ranks',htpRanksTxt:'XP accumulates automatically to advance your rank.',
+  htpShop:'🛒 Shop',htpShopTxt:'Buy gear with gold to boost your stats.',
+  aboutTitle:'🏛️ Mongolian National Wrestling',
+  aboutIntro:'One of the world\'s oldest martial arts, with over 7000 years of history.',
+  aH:'📜 History',aHt:'Mongolian wrestling (Bökh) has been practiced since before our era. It was part of military training during the Mongol Empire. In the national Naadam festival, wrestling is one of the "Three Games of Men" alongside horse racing and archery.',
+  aR:'📏 Rules',aRt:'You lose if any body part (except feet) touches the ground — knee, elbow, back, or head. There is no time limit. The match ends when someone falls.',
+  aDev:'🦅 Devekh Ceremony',aDevt:'Before and after each match, wrestlers perform the "devekh" — spreading their arms like an eagle. It is a sign of respect.',
+  aZ:'🎽 Costume',aZt:'Zodog (short-sleeved jacket), shuudag (shorts), gutal (traditional boots).',
+  ngTitle:'Wrestler Name', ngSub:'Start your career. Enter your wrestling name!',
+  ngStart:'🏆 Start Career!', btnBack:'← Back', btnPlayNow:'▶ Play Now!',
+  navHome:'Home',navBattle:'Battle',navTrain:'Training',navTour:'Naadam',
+  navShop:'Shop',navAch:'Achievements',navMus:'Move Museum',navCult:'Culture & Quiz',
+  navExit:'Exit',
+  ptHome:'🏠 My Wrestler',ptBattle:'⚔️ Battle',ptTrain:'💪 Training',
+  ptTour:'🏅 Naadam Tournament',ptShop:'🛒 Wrestling Shop',ptAch:'🏆 Achievements',
+  ptMus:'📚 Move Museum',ptCult:'🏛️ Mongolian Culture',
+  statStr:'🗡️ Strength',statSpd:'⚡ Speed',statBal:'⚖️ Balance',statEnd:'❤️ Endurance',
+  xpLabel:'XP Progress',dayLabel:'Day',winLabel:'Wins',loseLabel:'Losses',
+  todayStatus:'📋 Today\'s Status',trainDoneOf:'training done',
+  battleDoneY:'✅ Done',battleDoneN:'Not yet',
+  dailyCh:'🎯 Daily Challenge',
+  btnNewDay:'🌅 New Day',btnBattle:'⚔️ Battle',
+  rankPath:'🥋 Rank Path',
+  statsCard:'📊 Stats',statsCard2:'📈 Record',
+  ranks:['Falcon','Hawk','Elephant','Garuda','Lion','Champion'],
+  rankXps:[0,100,250,500,900,1500],
+  moves:[
+    {n:'Tripping',s:'Trip the legs',d:'Quickly trip the opponent\'s legs to break their balance. A basic beginner move.',ico:'🦵',p:18,c:10,r:0,h:.68,z:.34},
+    {n:'Grabbing',s:'Double grab',d:'Use both arms to grab and push the opponent down.',ico:'💪',p:22,c:13,r:0,h:.62,z:.3},
+    {n:'Sweeping',s:'Leg sweep',d:'Use quick leg movement to knock opponent off balance.',ico:'🌀',p:27,c:15,r:1,h:.58,z:.27},
+    {n:'Rushing',s:'Quick rush',d:'Sudden fast movement to push and destabilize.',ico:'💨',p:24,c:12,r:1,h:.63,z:.31},
+    {n:'Pressing',s:'Press from above',d:'Use body weight to press down and throw from above.',ico:'⬇️',p:34,c:22,r:2,h:.5,z:.24},
+    {n:'Spinning',s:'Spin attack',d:'Spin quickly and attack from the side to unbalance.',ico:'🔄',p:29,c:18,r:2,h:.55,z:.27},
+    {n:'Flying',s:'Eagle dive',d:'Leap and dive like an eagle — a champion\'s ultimate move.',ico:'🦅',p:40,c:26,r:3,h:.45,z:.21},
+    {n:'Tilting',s:'Tilt & throw',d:'Redirect the opponent\'s movement sideways to unbalance.',ico:'↩️',p:31,c:19,r:3,h:.53,z:.26}
+  ],
+  opps:[
+    {n:'Mergen',ico:'🤼',d:'New district wrestler',rank:0,str:8,spd:7,bal:7,end:8,hp:75,gold:12,xp:20,diff:'🟢 Easy'},
+    {n:'Bataa',ico:'🤼',d:'Average district wrestler',rank:0,str:10,spd:9,bal:9,end:10,hp:90,gold:18,xp:28,diff:'🟢 Easy'},
+    {n:'Ganbold',ico:'🤼',d:'Strong district wrestler',rank:0,str:13,spd:11,bal:10,end:12,hp:105,gold:25,xp:38,diff:'🟡 Medium'},
+    {n:'Dorj',ico:'🤼‍♂️',d:'Provincial Falcon',rank:1,str:15,spd:13,bal:13,end:14,hp:118,gold:35,xp:50,diff:'🟡 Medium'},
+    {n:'Enkhbayar',ico:'🤼‍♂️',d:'Provincial Hawk',rank:1,str:17,spd:16,bal:15,end:16,hp:132,gold:45,xp:65,diff:'🟡 Medium'},
+    {n:'Gantulga',ico:'🤼‍♂️',d:'Provincial Elephant',rank:2,str:20,spd:18,bal:17,end:19,hp:150,gold:58,xp:85,diff:'🔴 Hard'},
+    {n:'Temuujin',ico:'🏋️',d:'National Garuda',rank:2,str:24,spd:21,bal:20,end:22,hp:170,gold:75,xp:110,diff:'🔴 Hard'},
+    {n:'Bayar-Champion',ico:'👑',d:'National Champion',rank:3,str:29,spd:26,bal:25,end:27,hp:200,gold:120,xp:160,diff:'🔴 Very Hard'}
+  ],
+  shopItems:[
+    {id:0,n:'Standard Zodog',ico:'🎽',d:'Traditional red wrestling jacket',b:'No special bonus',st:null,v:0,p:0,own:true},
+    {id:1,n:'Speed Zodog',ico:'✨',d:'Made of lightweight material',b:'⚡ Speed +3',st:'spd',v:3,p:50,own:false},
+    {id:2,n:'Power Zodog',ico:'🔴',d:'Heavy, durable wrestling jacket',b:'🗡️ Strength +3',st:'str',v:3,p:50,own:false},
+    {id:3,n:'Champion\'s Zodog',ico:'👑',d:'Gold-embroidered jacket',b:'All stats +2',st:'all',v:2,p:120,own:false},
+    {id:4,n:'Traditional Gutal',ico:'👢',d:'Mongolian traditional boots',b:'⚖️ Balance +3',st:'bal',v:3,p:40,own:false},
+    {id:5,n:'Endurance Shorts',ico:'🩲',d:'Special weave shorts',b:'❤️ Endurance +3',st:'end',v:3,p:40,own:false}
+  ],
+  achs:[
+    {id:'w1',n:'First Victory',ico:'⭐',d:'Win your first match'},
+    {id:'w5',n:'5 Wins',ico:'🥉',d:'Win 5 matches'},
+    {id:'w20',n:'20 Wins',ico:'🥈',d:'Win 20 matches'},
+    {id:'r1',n:'Hawk',ico:'🦆',d:'Earn the Hawk rank'},
+    {id:'r3',n:'Garuda',ico:'🦅',d:'Earn the Garuda rank'},
+    {id:'r5',n:'Champion',ico:'👑',d:'Earn the Champion rank'},
+    {id:'t10',n:'Trainee',ico:'💪',d:'Complete 10 training sessions'},
+    {id:'m4',n:'Technician',ico:'🌀',d:'Learn 4 moves'},
+    {id:'g100',n:'Rich Wrestler',ico:'🪙',d:'Earn 100 gold'},
+    {id:'n1',n:'Festival Hero',ico:'🏟️',d:'Win a Naadam tournament'}
+  ],
+  costumes:[
+    {n:'Traditional Red',ico:'🎽',d:'Mongolian traditional red zodog'},
+    {n:'Sky Blue',ico:'💙',d:'Sky-blue zodog'},
+    {n:'Golden Champion',ico:'👑',d:'Gold-embroidered zodog'}
+  ],
+  quiz:[
+    {q:'Which month does the Mongolian Naadam festival take place?',opts:['June 1','July 11','August 8','May 15'],a:1,e:'The Mongolian National Naadam is held every year on July 11-13.'},
+    {q:'What is the highest rank in Mongolian wrestling?',opts:['Lion','Champion','Garuda','Elephant'],a:1,e:'Champion (Avargu) — the highest rank at the national Naadam.'},
+    {q:'How do you lose in Mongolian wrestling?',opts:['Time runs out','Body part touches ground','Three misses','Looking weak'],a:1,e:'You lose when any body part except feet (knee, elbow, back, head) touches the ground.'},
+    {q:"What is the 'Sweeping' (Suylakh) move?",opts:['Press from above','Unbalance with legs','Double grab','Counter attack'],a:1,e:'Sweeping — use quick leg movements to knock the opponent off balance.'},
+    {q:'What are the 3 games of the Mongolian Naadam?',opts:['Wrestling, Football, Shagai','Wrestling, Archery, Horse Racing','Wrestling, Basketball, Archery','Chess, Wrestling, Racing'],a:1,e:"The three games of Naadam: Wrestling, Archery, and Horse Racing."},
+    {q:"What is 'Devekh'?",opts:['A move name','A rank name','A pre-match ceremony','The arena name'],a:2,e:'Devekh — spreading arms like an eagle before and after a match. It is a sign of respect.'}
+  ],
+  oppSelectTitle:'Select your opponent:',oppLocked:'🔒 Rank required',
+  bRuleSelect:'⚡ Select a move below!',
+  bRuleTiming:'🎯 Press SPACE in the green zone!',
+  bRuleEnemy:'🤼 %s is counter-attacking...',
+  bRulePlayer:'⚡ Your turn — pick a move!',
+  bStart:'🏁 Match vs %s begins!',
+  bTip:'💡 Choose a move, then press SPACE when the bar enters the green zone!',
+  bPerfect:'✨ Perfect timing!',bNoStam:'⚡ Not enough stamina!',
+  bHit:'✅ %s — dealt %d damage to %s!',
+  bMiss:'❌ %s missed!',
+  bEHit:'%s %s: %s — %d damage!',
+  bEMiss:'%s %s: %s missed',
+  bWin:'🏆 Victory!',bLose:'💔 Defeat',
+  bWinMsg:'Defeated %s!',bLoseMsg:'%s was stronger.',
+  bAgain:'Battle Again',bHome:'Home',
+  bGoTrain:'💪 Go Train',bRetry:'Try Again',
+  bTimingHint:'Press SPACE or tap the screen',
+  trTitle:'📋 Today: %d/4 training done.',
+  trTypes:[
+    {id:'str',n:'Stone Lifting',ico:'🏋️',d:'Click 20 times!',g:'🗡️ Strength +2',stat:'str',k:'click',tgt:20},
+    {id:'spd',n:'Sprint',ico:'🏃',d:'Press SPACE as fast as possible for 3s!',g:'⚡ Speed +2',stat:'spd',k:'spam',tgt:25},
+    {id:'bal',n:'Balance',ico:'🧘',d:'Hold SPACE for 3 seconds!',g:'⚖️ Balance +2',stat:'bal',k:'hold',tgt:3},
+    {id:'end',n:'Horse Riding',ico:'🐎',d:'Press SPACE/X 30 times!',g:'❤️ Endurance +2',stat:'end',k:'spam',tgt:30}
+  ],
+  trDone:'✅ Done',trFinish:'💪 Training Complete!',trGain:'+12 XP',
+  mgStart:'🚀 Start',mgCancel:'✕ Cancel',mgClick:'👆 Click!',
+  tourLevels:[
+    {n:'District Naadam',ico:'🏘️',ops:[0,1,2],xp:60,gold:40,rnk:0},
+    {n:'Provincial Naadam',ico:'🏙️',ops:[3,4,5],xp:120,gold:80,rnk:1},
+    {n:'National Naadam',ico:'🏛️',ops:[6,7],xp:250,gold:150,rnk:3}
+  ],
+  tourLocked:'🔒 Requires %s rank',
+  tourDone:'✅ Tournament completed!',
+  tourEnter:'🏅 Enter Tournament',
+  tourFight:'⚔️ Fight %s',
+  tourRoundWon:'Defeated %s! On to the next round.',
+  tourWon:'%s Tournament Champion!',
+  tourLost:'%s was stronger.',
+  continueBtn:'Continue',
+  shopGold:'Gold',ownedBadge:'✅ Owned',buyBtn:'Buy',buyDone:'Purchase Successful!',
+  achLocked:'Hidden achievement',
+  cosTitle:'🎽 Choose Costume',devTitle:'🦅 Devekh Ceremony',
+  devText:'Before and after each match, the wrestler spreads their arms like an eagle — a gesture of respect.\n\nThe zasagch (second) ties the wrestler\'s zodog before the match.',
+  quizTitle:'❓ Knowledge Quiz',
+  quizScore:'Question %d/%d · Score: %d',
+  quizDone:'Quiz Complete!',quizScore2:'Score: %d/%d',
+  quizRetry:'Try Again',quizNext:'Next →',
+  welcomeTitle:'Welcome! 🎉',
+  welcomeMsg:'career has begun!\n📌 Train first, then battle.\n📌 You start as Falcon ✊',
+  gotIt:'Got it!',
+  newDayTitle:'🌅 New Day',
+  newDayMsg:'Day %d begins! Stamina restored.',
+  rankUpTitle:'New Rank! %s',rankUpMsg:'Congratulations! You have earned a new rank!',
+  moveTitle:'New Move: %s',
+  achTitle:'Achievement: %s',
+  challengeDone:'🎯 Challenge Complete!',challengeMsg:'+%dXP +%d🪙',
+  presets:['Baatar','Munkh','Erdene','Chinggis','Buyant'],
+  challengeList:[
+    {ico:'⚔️',t:'Battle',d:'Win 1 match today',type:'win',n:1,xp:20,gold:10},
+    {ico:'💪',t:'Trainer',d:'Complete 3 training sessions',type:'train',n:3,xp:15,gold:8},
+    {ico:'🏅',t:'Preparation',d:'Complete all 4 trainings',type:'train',n:4,xp:25,gold:15},
+    {ico:'⚔️',t:'Double Win',d:'Win 2 matches today',type:'win',n:2,xp:30,gold:20}
+  ],
+  historyTitle:'📖 Wrestling History',
+  historyText:'Mongolian wrestling has been practiced since before our era. It was part of military training during the Mongol Empire.\n\nNaadam is held every year on July 11-13. Wrestling, Archery, and Horse Racing — the Three Games of Men.'
+},
+
+tr:{
+  gameTitle:'ᠳᠡᠪᠵᠡᠭ᠌', gameSub:'ᠠᠪᠤᠷᠭᠤ ᠶᠢᠨ ᠵᠠᠮ',
+  tagline:'ᠮᠣᠩᠭᠣᠯ ᠦᠨᠳᠦᠰᠦᠨ ᠪᠥᠬᠡ ᠶᠢᠨ ᠲᠣᠭᠯᠠᠭᠠᠮ',
+  btnPlay:'▶  ᠲᠣᠭᠯᠠᠬᠤ', btnHtp:'📖  ᠬᠡᠷᠬᠢᠨ ᠲᠣᠭᠯᠠᠬᠤ', btnAbout:'🏛️  ᠮᠣᠩᠭᠣᠯ ᠪᠥᠬᠡ',
+  htpTitle:'📖 ᠬᠡᠷᠬᠢᠨ ᠲᠣᠭᠯᠠᠬᠤ ᠪᠣᠢ?',
+  htpIntro:'ᠨᠠᠴᠢᠨ ᠡᠴᠡ ᠡᠬᠢᠯᠡᠵᠦ ᠠᠪᠤᠷᠭᠤ ᠬᠦᠷᠲᠡᠯ᠎ᠡ ᠥᠰᠴᠦ ᠪᠠᠷᠢᠯᠳᠤᠭᠠᠷᠠᠢ!',
+  htpGoal:'🎯 ᠵᠣᠷᠢᠯᠭ᠎ᠠ',htpGoalTxt:'XP ᠬᠤᠷᠠᠮᠲᠤᠯᠠᠵᠤ ᠴᠣᠯ᠎ᠠ ᠠᠬᠢᠭᠤᠯᠤᠭᠠᠷᠠᠢ᠃',
+  htpBattle:'⚔️ ᠪᠠᠷᠢᠯᠳᠤᠭᠠᠨ',htpBatTxt:'ᠮᠡᠬᠡ ᠰᠣᠩᠭᠣᠭᠠᠳ᠂ ᠨᠣᠭᠤᠭᠠᠨ ᠬᠡᠰᠡᠭ ᠲᠦ SPACE ᠳᠠᠷᠤᠭᠠᠷᠠᠢ᠃',
+  htpTrain:'💪 ᠳᠠᠰᠬᠠᠯ',htpTrainTxt:'ᠡᠳᠦᠷ ᠪᠦᠷᠢ 4 ᠳᠠᠰᠬᠠᠯ ᠬᠢᠵᠦ ᠴᠢᠨᠠᠷᠠᠭ ᠨᠡᠮᠡᠭᠳᠡᠭᠦᠯ᠎ᠡ᠃',
+  htpRanks:'🥋 ᠴᠣᠯ᠎ᠠ',htpRanksTxt:'XP ᠬᠤᠷᠠᠮᠲᠤᠯᠠᠵᠤ ᠴᠣᠯ᠎ᠠ ᠠᠬᠢᠨ᠎ᠠ᠃',
+  htpShop:'🛒 ᠳᠡᠯᠭᠡᠭᠦᠷ',htpShopTxt:'ᠠᠯᠲᠠᠪᠠᠷ ᠲᠣᠨᠣᠭ ᠬᠡᠷᠡᠭᠰᠡᠯ ᠬᠤᠳᠠᠯᠳᠤᠨ ᠠᠪᠤᠭᠠᠷᠠᠢ᠃',
+  aboutTitle:'🏛️ ᠮᠣᠩᠭᠣᠯ ᠦᠨᠳᠦᠰᠦᠨ ᠪᠥᠬᠡ',
+  aboutIntro:'7000 ᠵᠢᠯ ᠦᠨ ᠲᠡᠦᠬᠡ ᠲᠡᠢ ᠳᠡᠯᠡᠬᠡᠢ ᠶᠢᠨ ᠬᠠᠮᠤᠭ ᠤᠨ ᠡᠷᠲᠡᠨ ᠦ ᠲᠤᠯᠠᠭᠠᠴᠢᠨ ᠤᠷᠠᠯᠢᠭ᠃',
+  aH:'📜 ᠲᠡᠦᠬᠡ',aHt:'ᠮᠣᠩᠭᠣᠯ ᠪᠥᠬᠡ ᠮᠠᠨ ᠤ ᠡᠷᠢᠨ ᠦ ᠡᠮᠦᠨ᠎ᠡ ᠡᠴᠡ ᠤᠯᠠᠮᠵᠢᠯᠠᠭᠳᠠᠨ ᠢᠷᠡᠭᠰᠡᠨ᠃',
+  aR:'📏 ᠳᠦᠷᠢᠮ',aRt:'ᠥᠪᠳᠥᠭ᠂ ᠲᠣᠬᠣᠢ᠂ ᠨᠢᠷᠤᠭᠤ᠂ ᠲᠣᠯᠣᠭᠠᠢ — ᠭᠠᠵᠠᠷ ᠬᠦᠷᠪᠡᠯ ᠢᠯᠠᠭᠳᠠᠨ᠎ᠠ᠃',
+  aDev:'🦅 ᠳᠡᠪᠡᠬᠦ ᠶᠣᠰᠣᠯᠠᠯ',aDevt:'ᠪᠠᠷᠢᠯᠳᠤᠭᠠᠨ ᠤ ᠡᠮᠦᠨ᠎ᠡ ᠪᠤᠯᠤᠨ ᠳᠠᠷᠠᠭ᠎ᠠ ᠪᠥᠬᠡ ᠪᠦᠷᠭᠦᠳ ᠰᠢᠭ ᠭᠠᠷᠠᠭ ᠢᠶᠠᠨ ᠳᠡᠯᠭᠡᠵᠦ ᠳᠡᠪᠡᠳᠡᠭ᠃',
+  aZ:'🎽 ᠬᠤᠪᠴᠠᠰᠤ',aZt:'ᠵᠣᠳᠤᠭ᠂ ᠱᠤᠤᠳᠠᠭ᠂ ᠭᠤᠲᠤᠯ᠃',
+  ngTitle:'ᠪᠥᠬᠡ ᠶᠢᠨ ᠨᠡᠷ᠎ᠡ', ngSub:'ᠶᠠᠪᠤᠳᠠᠯ ᠤᠨ ᠡᠬᠢᠯᠡᠯ᠃ ᠨᠡᠷ᠎ᠡ ᠪᠡᠨ ᠣᠷᠤᠭᠤᠯᠤᠭᠠᠷᠠᠢ!',
+  ngStart:'🏆 ᠶᠠᠪᠤᠳᠠᠯ ᠡᠬᠢᠯᠡᠬᠦ!', btnBack:'← ᠪᠤᠴᠠᠬᠤ', btnPlayNow:'▶ ᠲᠣᠭᠯᠠᠬᠤ!',
+  navHome:'ᠨᠢᠭᠦᠷ',navBattle:'ᠪᠠᠷᠢᠯᠳᠤᠭᠠᠨ',navTrain:'ᠳᠠᠰᠬᠠᠯ',navTour:'ᠨᠠᠭᠠᠳᠤᠮ',
+  navShop:'ᠳᠡᠯᠭᠡᠭᠦᠷ',navAch:'ᠠᠮᠵᠢᠯᠲᠠ',navMus:'ᠮᠡᠬᠡ ᠮᠦᠽᠧᠢ',navCult:'ᠰᠣᠶᠣᠯ',
+  navExit:'ᠭᠠᠷᠬᠤ',
+  ptHome:'🏠 ᠮᠢᠨᠦ ᠪᠥᠬᠡ',ptBattle:'⚔️ ᠪᠠᠷᠢᠯᠳᠤᠭᠠᠨ',ptTrain:'💪 ᠳᠠᠰᠬᠠᠯᠵᠢᠭᠤᠯᠬᠤ',
+  ptTour:'🏅 ᠨᠠᠭᠠᠳᠤᠮ',ptShop:'🛒 ᠪᠥᠬᠡ ᠶᠢᠨ ᠳᠡᠯᠭᠡᠭᠦᠷ',ptAch:'🏆 ᠠᠮᠵᠢᠯᠲᠠ',
+  ptMus:'📚 ᠮᠡᠬᠡ ᠶᠢᠨ ᠮᠦᠽᠧᠢ',ptCult:'🏛️ ᠮᠣᠩᠭᠣᠯ ᠰᠣᠶᠣᠯ',
+  statStr:'🗡️ ᠬᠦᠴᠦ',statSpd:'⚡ ᠬᠤᠷᠳᠤ',statBal:'⚖️ ᠲᠡᠩᠴᠡᠪᠦᠷᠢ',statEnd:'❤️ ᠲᠡᠰᠪᠦᠷᠢ',
+  xpLabel:'XP ᠳᠡᠪᠰᠢᠯ',dayLabel:'ᠡᠳᠦᠷ',winLabel:'ᠢᠯᠠᠯᠲᠠ',loseLabel:'ᠢᠯᠠᠭᠳᠠᠯ',
+  todayStatus:'📋 ᠥᠨᠥᠳᠥᠷ ᠦᠨ ᠪᠠᠢᠢᠳᠠᠯ',trainDoneOf:'ᠳᠠᠰᠬᠠᠯ ᠬᠢᠯ᠎ᠡ',
+  battleDoneY:'✅ ᠬᠢᠯ᠎ᠡ',battleDoneN:'ᠬᠢᠭᠡᠳᠦᠢ',
+  dailyCh:'🎯 ᠡᠳᠦᠷ ᠦᠨ ᠳᠠᠭᠠᠯᠳᠠᠪᠤᠷᠢ',
+  btnNewDay:'🌅 ᠰᠢᠨ᠎ᠡ ᠡᠳᠦᠷ',btnBattle:'⚔️ ᠪᠠᠷᠢᠯᠳᠤᠬᠤ',
+  rankPath:'🥋 ᠴᠣᠯᠠᠨ ᠵᠠᠮᠨᠠᠯ',
+  statsCard:'📊 ᠴᠢᠨᠠᠷ',statsCard2:'📈 ᠲᠣᠭᠠᠯᠠᠯ',
+  ranks:['ᠨᠠᠴᠢᠨ','ᠬᠠᠷᠴᠠᠭ᠎ᠠ','ᠵᠠᠭᠠᠨ','ᠭᠠᠷᠤᠳᠢ','ᠠᠷᠰᠯᠠᠨ','ᠠᠪᠤᠷᠭᠤ'],
+  rankXps:[0,100,250,500,900,1500],
+  moves:[
+    {n:'ᠬᠤᠲᠤᠭ᠎ᠠ',s:'ᠬᠥᠯᠥ ᠬᠤᠲᠤᠭᠠᠬᠤ',d:'ᠬᠥᠯᠥ ᠶᠢ ᠬᠤᠷᠳᠤᠨ ᠬᠤᠲᠤᠭᠠᠵᠤ ᠲᠡᠩᠴᠡᠪᠦᠷᠢ ᠶᠢ ᠠᠯᠳᠠᠭᠤᠯᠤᠨ᠎ᠠ᠃',ico:'🦵',p:18,c:10,r:0,h:.68,z:.34},
+    {n:'ᠬᠠᠮᠠᠬᠤ',s:'ᠬᠤᠶᠠᠷ ᠭᠠᠷᠠᠷ ᠬᠠᠮᠠᠬᠤ',d:'ᠬᠤᠶᠠᠷ ᠭᠠᠷᠠᠷ ᠢᠶᠠᠷ ᠬᠠᠮᠠᠭᠠᠳ ᠬᠦᠴᠦ ᠱᠠᠬᠠᠵᠤ ᠳᠠᠷᠤᠨ᠎ᠠ᠃',ico:'💪',p:22,c:13,r:0,h:.62,z:.3},
+    {n:'ᠰᠤᠶᠢᠯᠠᠬᠤ',s:'ᠬᠥᠯᠥ ᠶᠢᠨ ᠮᠡᠬᠡ',d:'ᠬᠤᠷᠳᠤᠨ ᠬᠥᠯᠥ ᠶᠢᠨ ᠬᠥᠳᠡᠯᠭᠡᠭᠡᠨᠡᠷ ᠲᠡᠩᠴᠡᠪᠦᠷᠢ ᠶᠢ ᠠᠯᠳᠠᠭᠤᠯᠤᠨ᠎ᠠ᠃',ico:'🌀',p:27,c:15,r:1,h:.58,z:.27},
+    {n:'ᠱᠤᠤᠷᠠᠬᠤ',s:'ᠬᠤᠷᠳᠤᠨ ᠳᠣᠪᠲᠣᠯᠬᠤ',d:'ᠭᠡᠨᠡᠲᠡᠶᠢᠨ ᠬᠤᠷᠳᠤᠨ ᠬᠥᠳᠡᠯᠭᠡᠭᠡᠨᠡᠷ ᠳᠠᠢᠢᠷᠠᠵᠤ ᠠᠯᠳᠠᠭᠤᠯᠤᠨ᠎ᠠ᠃',ico:'💨',p:24,c:12,r:1,h:.63,z:.31},
+    {n:'ᠮᠣᠷᠳᠤᠬᠤ',s:'ᠳᠡᠭᠡᠷ᠎ᠡ ᠡᠴᠡ ᠳᠠᠷᠤᠬᠤ',d:'ᠪᠡᠶᠡ ᠶᠢᠨ ᠵᠢᠩ ᠢ ᠠᠰᠢᠭᠯᠠᠵᠤ ᠳᠡᠭᠡᠷ᠎ᠡ ᠡᠴᠡ ᠬᠦᠴᠦᠲᠡᠢ ᠳᠠᠷᠤᠵᠤ ᠤᠨᠠᠭᠠᠨ᠎ᠠ᠃',ico:'⬇️',p:34,c:22,r:2,h:.5,z:.24},
+    {n:'ᠳᠠᠪᠠᠭᠤᠯᠬᠤ',s:'ᠡᠷᠭᠢᠵᠦ ᠳᠠᠢᠢᠷᠠᠬᠤ',d:'ᠬᠤᠷᠳᠤᠨ ᠡᠷᠭᠢᠯᠲᠡ ᠶᠢᠨ ᠬᠥᠳᠡᠯᠭᠡᠭᠡᠨᠡᠷ ᠬᠠᠵᠠᠭᠤᠪᠠᠰᠠ ᠡᠴᠡ ᠳᠠᠢᠢᠷᠠᠵᠤ ᠠᠯᠳᠠᠭᠤᠯᠤᠨ᠎ᠠ᠃',ico:'🔄',p:29,c:18,r:2,h:.55,z:.27},
+    {n:'ᠳᠡᠪᠡᠬᠦ',s:'ᠪᠦᠷᠭᠦᠳ ᠳᠡᠪᠡᠬᠦ',d:'ᠪᠦᠷᠭᠦᠳ ᠰᠢᠭ ᠦᠰᠦᠷᠦᠨ ᠳᠠᠢᠢᠷᠠᠬᠤ ᠠᠪᠤᠷᠭᠤ ᠮᠡᠬᠡ᠃',ico:'🦅',p:40,c:26,r:3,h:.45,z:.21},
+    {n:'ᠬᠠᠵᠠᠶᠢᠷᠠᠭᠤᠯᠬᠤ',s:'ᠲᠠᠲᠠᠵᠤ ᠠᠯᠳᠠᠭᠤᠯᠬᠤ',d:'ᠡᠰᠡᠷᠭᠦᠴᠡᠭᠴᠢ ᠶᠢᠨ ᠬᠥᠳᠡᠯᠭᠡᠭᠡᠨ ᠢ ᠬᠠᠵᠠᠭᠤ ᠲᠡᠰᠢ ᠴᠢᠭᠯᠡᠭᠦᠯᠵᠦ ᠲᠡᠩᠴᠡᠪᠦᠷᠢ ᠶᠢ ᠠᠯᠳᠠᠭᠤᠯᠤᠨ᠎ᠠ᠃',ico:'↩️',p:31,c:19,r:3,h:.53,z:.26}
+  ],
+  opps:[
+    {n:'ᠮᠡᠷᠭᠡᠨ',ico:'🤼',d:'ᠰᠤᠮᠤᠨ ᠤ ᠰᠢᠨ᠎ᠡ ᠪᠥᠬᠡ',rank:0,str:8,spd:7,bal:7,end:8,hp:75,gold:12,xp:20,diff:'🟢 ᠬᠢᠯᠪᠠᠷ'},
+    {n:'ᠪᠠᠲᠤ᠎ᠠ',ico:'🤼',d:'ᠰᠤᠮᠤᠨ ᠤ ᠳᠤᠮᠳᠠᠳᠤ ᠪᠥᠬᠡ',rank:0,str:10,spd:9,bal:9,end:10,hp:90,gold:18,xp:28,diff:'🟢 ᠬᠢᠯᠪᠠᠷ'},
+    {n:'ᠭᠠᠨᠪᠣᠯᠳ',ico:'🤼',d:'ᠰᠤᠮᠤᠨ ᠤ ᠬᠦᠴᠦᠲᠡᠢ ᠪᠥᠬᠡ',rank:0,str:13,spd:11,bal:10,end:12,hp:105,gold:25,xp:38,diff:'🟡 ᠳᠤᠮᠳᠠ'},
+    {n:'ᠳᠣᠷᠵᠢ',ico:'🤼‍♂️',d:'ᠠᠢᠢᠮᠠᠭ ᠤᠨ ᠨᠠᠴᠢᠨ',rank:1,str:15,spd:13,bal:13,end:14,hp:118,gold:35,xp:50,diff:'🟡 ᠳᠤᠮᠳᠠ'},
+    {n:'ᠡᠩᠬᠡᠪᠠᠶᠠᠷ',ico:'🤼‍♂️',d:'ᠠᠢᠢᠮᠠᠭ ᠤᠨ ᠬᠠᠷᠴᠠᠭ᠎ᠠ',rank:1,str:17,spd:16,bal:15,end:16,hp:132,gold:45,xp:65,diff:'🟡 ᠳᠤᠮᠳᠠ'},
+    {n:'ᠭᠠᠨᠲᠤᠯᠭ᠎ᠠ',ico:'🤼‍♂️',d:'ᠠᠢᠢᠮᠠᠭ ᠤᠨ ᠵᠠᠭᠠᠨ',rank:2,str:20,spd:18,bal:17,end:19,hp:150,gold:58,xp:85,diff:'🔴 ᠬᠡᠴᠡᠭᠦᠦ'},
+    {n:'ᠲᠡᠮᠦᠵᠢᠨ',ico:'🏋️',d:'ᠤᠯᠤᠰ ᠤᠨ ᠭᠠᠷᠤᠳᠢ',rank:2,str:24,spd:21,bal:20,end:22,hp:170,gold:75,xp:110,diff:'🔴 ᠬᠡᠴᠡᠭᠦᠦ'},
+    {n:'ᠪᠠᠶᠠᠷ᠋ᠠᠪᠤᠷᠭᠤ',ico:'👑',d:'ᠤᠯᠤᠰ ᠤᠨ ᠠᠪᠤᠷᠭᠤ',rank:3,str:29,spd:26,bal:25,end:27,hp:200,gold:120,xp:160,diff:'🔴 ᠮᠠᠰᠢ ᠬᠡᠴᠡᠭᠦᠦ'}
+  ],
+  shopItems:[
+    {id:0,n:'ᠡᠩ ᠵᠣᠳᠤᠭ',ico:'🎽',d:'ᠤᠯᠠᠮᠵᠢᠯᠠᠯᠲᠤ ᠤᠯᠠᠭᠠᠨ ᠵᠣᠳᠤᠭ',b:'ᠣᠨᠴᠠ ᠴᠢᠨᠠᠷ ᠪᠠᠢᠢᠬᠤᠭᠤᠢ',st:null,v:0,p:0,own:true},
+    {id:1,n:'ᠬᠤᠷᠳᠤᠨ ᠵᠣᠳᠤᠭ',ico:'✨',d:'ᠬᠥᠩᠭᠡᠨ ᠮᠠᠲ᠋ᠧᠷᠢᠶᠠᠯᠠᠷ',b:'⚡ ᠬᠤᠷᠳᠤ +3',st:'spd',v:3,p:50,own:false},
+    {id:2,n:'ᠬᠦᠴᠦᠨ ᠵᠣᠳᠤᠭ',ico:'🔴',d:'ᠬᠦᠨᠳᠦ᠂ ᠪᠠᠲᠤ ᠳᠠᠭᠠᠰᠤᠨ',b:'🗡️ ᠬᠦᠴᠦ +3',st:'str',v:3,p:50,own:false},
+    {id:3,n:'ᠠᠪᠤᠷᠭᠤᠨ ᠵᠣᠳᠤᠭ',ico:'👑',d:'ᠠᠯᠲᠠᠨ ᠬᠡᠪᠯᠡᠮᠡᠯᠲᠡᠢ',b:'ᠪᠦᠬᠦ ᠴᠢᠨᠠᠷ +2',st:'all',v:2,p:120,own:false},
+    {id:4,n:'ᠤᠯᠠᠮᠵᠢᠯᠠᠯᠲᠤ ᠭᠤᠲᠤᠯ',ico:'👢',d:'ᠮᠣᠩᠭᠣᠯ ᠭᠤᠲᠤᠯ',b:'⚖️ ᠲᠡᠩᠴᠡᠪᠦᠷᠢ +3',st:'bal',v:3,p:40,own:false},
+    {id:5,n:'ᠲᠡᠰᠪᠦᠷᠢ ᠶᠢᠨ ᠱᠤᠤᠳᠠᠭ',ico:'🩲',d:'ᠣᠨᠴᠠ ᠨᠡᠬᠡᠯᠲᠡᠲᠡᠢ',b:'❤️ ᠲᠡᠰᠪᠦᠷᠢ +3',st:'end',v:3,p:40,own:false}
+  ],
+  achs:[
+    {id:'w1',n:'ᠠᠩᠬᠠᠨ ᠤ ᠢᠯᠠᠯᠲᠠ',ico:'⭐',d:'ᠠᠩᠬᠠᠨ ᠤ ᠪᠠᠷᠢᠯᠳᠤᠭᠠᠨ ᠢᠯᠠᠬᠤ'},
+    {id:'w5',n:'5 ᠢᠯᠠᠯᠲᠠ',ico:'🥉',d:'5 ᠪᠠᠷᠢᠯᠳᠤᠭᠠᠨ ᠢᠯᠠᠬᠤ'},
+    {id:'w20',n:'20 ᠢᠯᠠᠯᠲᠠ',ico:'🥈',d:'20 ᠪᠠᠷᠢᠯᠳᠤᠭᠠᠨ ᠢᠯᠠᠬᠤ'},
+    {id:'r1',n:'ᠬᠠᠷᠴᠠᠭ᠎ᠠ',ico:'🦆',d:'ᠬᠠᠷᠴᠠᠭ᠎ᠠ ᠴᠣᠯ᠎ᠠ ᠠᠪᠬᠤ'},
+    {id:'r3',n:'ᠭᠠᠷᠤᠳᠢ',ico:'🦅',d:'ᠭᠠᠷᠤᠳᠢ ᠴᠣᠯ᠎ᠠ ᠠᠪᠬᠤ'},
+    {id:'r5',n:'ᠠᠪᠤᠷᠭᠤ',ico:'👑',d:'ᠠᠪᠤᠷᠭᠤ ᠴᠣᠯ᠎ᠠ ᠠᠪᠬᠤ'},
+    {id:'t10',n:'ᠳᠠᠰᠬᠠᠯᠴᠢ',ico:'💪',d:'10 ᠳᠠᠰᠬᠠᠯ ᠬᠢᠬᠦ'},
+    {id:'m4',n:'ᠮᠡᠬᠡᠵᠢᠨ',ico:'🌀',d:'4 ᠮᠡᠬᠡ ᠰᠤᠷᠬᠤ'},
+    {id:'g100',n:'ᠪᠠᠶᠠᠨ ᠪᠥᠬᠡ',ico:'🪙',d:'100 ᠠᠯᠲᠠ ᠣᠯᠬᠤ'},
+    {id:'n1',n:'ᠨᠠᠭᠠᠳᠤᠮᠴᠢ',ico:'🏟️',d:'ᠨᠠᠭᠠᠳᠤᠮ ᠳᠤ ᠲᠡᠷᠢᠭᠦᠯᠡᠬᠦ'}
+  ],
+  costumes:[
+    {n:'ᠤᠯᠠᠮᠵᠢᠯᠠᠯᠲᠤ ᠤᠯᠠᠭᠠᠨ',ico:'🎽',d:'ᠮᠣᠩᠭᠣᠯ ᠤᠯᠠᠮᠵᠢᠯᠠᠯᠲᠤ ᠤᠯᠠᠭᠠᠨ ᠵᠣᠳᠤᠭ'},
+    {n:'ᠬᠥᠬᠡ ᠲᠡᠩᠭᠡᠷᠢ',ico:'💙',d:'ᠲᠡᠩᠭᠡᠷᠢ ᠶᠢᠨ ᠬᠥᠬᠡ ᠵᠣᠳᠤᠭ'},
+    {n:'ᠠᠯᠲᠠᠨ ᠠᠪᠤᠷᠭᠤ',ico:'👑',d:'ᠠᠯᠲᠠᠨ ᠬᠡᠪᠯᠡᠮᠡᠯᠲᠡᠢ ᠵᠣᠳᠤᠭ'}
+  ],
+  quiz:[
+    {q:'ᠮᠣᠩᠭᠣᠯ ᠤᠨ ᠨᠠᠭᠠᠳᠤᠮ ᠬᠡᠳᠦᠨ ᠰᠠᠷ᠎ᠠ ᠶᠢᠨ ᠬᠡᠳᠦᠨ ᠳᠦ ᠪᠣᠯᠳᠠᠭ ᠪᠣᠢ?',opts:['6-ᠳᠤᠭᠠᠷ ᠰᠠᠷ᠎ᠠ ᠶᠢᠨ 1','7-ᠳᠤᠭᠠᠷ ᠰᠠᠷ᠎ᠠ ᠶᠢᠨ 11','8-ᠳᠤᠭᠠᠷ ᠰᠠᠷ᠎ᠠ ᠶᠢᠨ 8','5-ᠳᠤᠭᠠᠷ ᠰᠠᠷ᠎ᠠ ᠶᠢᠨ 15'],a:1,e:'ᠮᠣᠩᠭᠣᠯ ᠤᠨ ᠦᠨᠳᠦᠰᠦᠨ ᠨᠠᠭᠠᠳᠤᠮ ᠵᠢᠯ ᠪᠦᠷᠢ 7-ᠳᠤᠭᠠᠷ ᠰᠠᠷ᠎ᠠ ᠶᠢᠨ 11-13-ᠨᠳᠤ ᠪᠣᠯᠳᠠᠭ᠃'},
+    {q:'ᠪᠥᠬᠡ ᠶᠢᠨ ᠬᠠᠮᠤᠭ ᠤᠨ ᠳᠡᠭᠡᠳᠦ ᠴᠣᠯ᠎ᠠ ᠠᠯᠢ ᠨᠢ ᠪᠣᠢ?',opts:['ᠠᠷᠰᠯᠠᠨ','ᠠᠪᠤᠷᠭᠤ','ᠭᠠᠷᠤᠳᠢ','ᠵᠠᠭᠠᠨ'],a:1,e:'ᠠᠪᠤᠷᠭᠤ — ᠤᠯᠤᠰ ᠤᠨ ᠨᠠᠭᠠᠳᠤᠮ ᠤᠨ ᠬᠠᠮᠤᠭ ᠤᠨ ᠳᠡᠭᠡᠳᠦ ᠴᠣᠯ᠎ᠠ᠃'},
+    {q:'ᠮᠣᠩᠭᠣᠯ ᠪᠥᠬᠡᠳᠦ ᠢᠯᠠᠭᠳᠠᠬᠤ ᠨᠥᠬᠥᠴᠡᠯ ᠶᠠᠭᠤ ᠪᠣᠢ?',opts:['ᠴᠠᠭ ᠳᠠᠭᠤᠰᠬᠤ','ᠪᠡᠶᠡ ᠶᠢᠨ ᠬᠡᠰᠡᠭ ᠭᠠᠵᠠᠷ ᠬᠦᠷᠬᠦ','ᠭᠤᠷᠪᠠ ᠠᠯᠳᠠᠬᠤ','ᠰᠤᠯ ᠬᠠᠷᠠᠭᠳᠠᠬᠤ'],a:1,e:'ᠥᠪᠳᠥᠭ᠂ ᠲᠣᠬᠣᠢ᠂ ᠨᠢᠷᠤᠭᠤ᠂ ᠲᠣᠯᠣᠭᠠᠢ ᠭᠠᠵᠠᠷ ᠬᠦᠷᠪᠡᠯ ᠢᠯᠠᠭᠳᠠᠨ᠎ᠠ᠃'},
+    {q:"'ᠰᠤᠶᠢᠯᠠᠬᠤ' ᠮᠡᠬᠡ ᠶᠠᠭᠤ ᠪᠣᠢ?",opts:['ᠳᠡᠭᠡᠷ᠎ᠡ ᠡᠴᠡ ᠳᠠᠷᠤᠬᠤ','ᠬᠥᠯᠥᠭᠡᠷ ᠲᠡᠩᠴᠡᠪᠦᠷᠢ ᠠᠯᠳᠠᠭᠤᠯᠬᠤ','ᠭᠠᠷᠠᠷ ᠬᠠᠮᠠᠬᠤ','ᠪᠤᠴᠠᠵᠤ ᠳᠠᠪᠰᠢᠬᠤ'],a:1,e:'ᠰᠤᠶᠢᠯᠠᠬᠤ — ᠬᠤᠷᠳᠤᠨ ᠬᠥᠯᠥ ᠶᠢᠨ ᠬᠥᠳᠡᠯᠭᠡᠭᠡᠨᠡᠷ ᠲᠡᠩᠴᠡᠪᠦᠷᠢ ᠶᠢ ᠠᠯᠳᠠᠭᠤᠯᠤᠨ᠎ᠠ᠃'},
+    {q:'ᠮᠣᠩᠭᠣᠯ ᠤᠨ ᠨᠠᠭᠠᠳᠤᠮ ᠳᠤ ᠶᠠᠮᠠᠷ 3 ᠲᠣᠭᠯᠠᠭᠠᠮ ᠣᠷᠣᠳᠠᠭ ᠪᠣᠢ?',opts:['ᠪᠥᠬᠡ᠂ ᠬᠥᠯ ᠪᠥᠮᠪᠥᠭᠡ᠂ ᠰᠢᠭᠠᠢ','ᠪᠥᠬᠡ᠂ ᠰᠤᠷ ᠬᠠᠷᠪᠤᠭ᠎ᠠ᠂ ᠮᠣᠷᠢᠨ ᠤᠶᠠᠭ᠎ᠠ','ᠪᠥᠬᠡ᠂ ᠰᠠᠭᠰᠤᠨ ᠪᠥᠮᠪᠥᠭᠡ᠂ ᠰᠤᠷ','ᠰᠢᠲᠠᠷ᠎ᠠ᠂ ᠪᠥᠬᠡ᠂ ᠤᠶᠠᠭ᠎ᠠ'],a:1,e:'ᠮᠣᠩᠭᠣᠯ ᠤᠨ ᠨᠠᠭᠠᠳᠤᠮ ᠤᠨ ᠭᠤᠷᠪᠠᠨ ᠲᠣᠭᠯᠠᠭᠠᠮ: ᠪᠥᠬᠡ᠂ ᠰᠤᠷ ᠬᠠᠷᠪᠤᠭ᠎ᠠ᠂ ᠮᠣᠷᠢᠨ ᠤᠶᠠᠭ᠎ᠠ᠃'},
+    {q:"'ᠳᠡᠪᠡᠬᠦ' ᠭᠡᠵᠦ ᠶᠠᠭᠤ ᠪᠣᠢ?",opts:['ᠮᠡᠬᠡ ᠶᠢᠨ ᠨᠡᠷ᠎ᠡ','ᠴᠣᠯᠠᠨ ᠨᠡᠷ᠎ᠡ','ᠪᠠᠷᠢᠯᠳᠤᠭᠠᠨ ᠤ ᠡᠮᠦᠨᠡᠬᠢ ᠶᠣᠰᠣᠯᠠᠯ','ᠳᠡᠪᠵᠡᠭ ᠦᠨ ᠨᠡᠷ᠎ᠡ'],a:2,e:'ᠳᠡᠪᠡᠬᠦ — ᠪᠠᠷᠢᠯᠳᠤᠭᠠᠨ ᠤ ᠡᠮᠦᠨ᠎ᠡ ᠪᠤᠯᠤᠨ ᠳᠠᠷᠠᠭ᠎ᠠ ᠪᠦᠷᠭᠦᠳ ᠰᠢᠭ ᠭᠠᠷᠠᠭ ᠢᠶᠠᠨ ᠳᠡᠯᠭᠡᠵᠦ ᠬᠢᠳᠡᠭ ᠶᠣᠰᠣᠯᠠᠯ᠃'}
+  ],
+  oppSelectTitle:'ᠡᠰᠡᠷᠭᠦᠴᠡᠭᠴᠢ ᠰᠣᠩᠭᠣᠭᠠᠷᠠᠢ:',oppLocked:'🔒 ᠴᠣᠯ᠎ᠠ ᠱᠠᠭᠠᠷᠳᠠᠭᠳᠠᠨ᠎ᠠ',
+  bRuleSelect:'⚡ ᠮᠡᠬᠡ ᠰᠣᠩᠭᠣᠭᠠᠷᠠᠢ!',
+  bRuleTiming:'🎯 ᠨᠣᠭᠤᠭᠠᠨ ᠬᠡᠰᠡᠭ ᠲᠦ SPACE ᠳᠠᠷᠤᠭᠠᠷᠠᠢ!',
+  bRuleEnemy:'🤼 %s ᠡᠰᠡᠷᠭᠦ ᠳᠣᠪᠲᠣᠯᠵᠤ ᠪᠠᠢᠢᠨ᠎ᠠ...',
+  bRulePlayer:'⚡ ᠲᠠᠨ ᠦ ᠡᠭᠡᠯᠵᠢ — ᠮᠡᠬᠡ ᠰᠣᠩᠭᠣᠭᠠᠷᠠᠢ!',
+  bStart:'🏁 %s-ᠲᠠᠢ ᠪᠠᠷᠢᠯᠳᠤᠭᠠᠨ ᠡᠬᠢᠯᠡᠯ᠎ᠡ!',
+  bTip:'💡 ᠮᠡᠬᠡ ᠰᠣᠩᠭᠣᠭᠠᠳ ᠨᠣᠭᠤᠭᠠᠨ ᠬᠡᠰᠡᠭ ᠲᠦ SPACE ᠳᠠᠷᠤᠭᠠᠷᠠᠢ!',
+  bPerfect:'✨ ᠲᠡᠭᠰᠢ ᠴᠠᠭ!',bNoStam:'⚡ ᠰᠲ᠋ᠠᠮᠢᠨᠠ ᠬᠦᠷᠬᠦᠭᠦᠢ!',
+  bHit:'✅ %s — %s-ᠳᠤ %d ᠬᠣᠬᠢᠷᠠᠯ!',
+  bMiss:'❌ %s ᠮᠡᠬᠡ ᠣᠷᠤᠭᠰᠠᠨᠤᠭᠤᠢ...',
+  bEHit:'%s %s: %s — %d ᠬᠣᠬᠢᠷᠠᠯ!',
+  bEMiss:'%s %s: %s ᠣᠷᠤᠭᠰᠠᠨᠤᠭᠤᠢ',
+  bWin:'🏆 ᠢᠯᠠᠯᠲᠠ!',bLose:'💔 ᠢᠯᠠᠭᠳᠠᠯ',
+  bWinMsg:'%s-ᠢ ᠢᠯᠠᠯ᠎ᠠ!',bLoseMsg:'%s ᠬᠦᠴᠦᠲᠡᠢ ᠪᠠᠢᠢᠯ᠎ᠠ᠃',
+  bAgain:'ᠳᠠᠬᠢᠨ ᠪᠠᠷᠢᠯᠳᠤᠬᠤ',bHome:'ᠨᠢᠭᠦᠷ',
+  bGoTrain:'💪 ᠳᠠᠰᠬᠠᠯ ᠳᠤ ᠣᠴᠢᠬᠤ',bRetry:'ᠳᠠᠬᠢᠨ ᠣᠷᠤᠯᠳᠤᠬᠤ',
+  bTimingHint:'SPACE ᠲᠣᠪᠴᠢ ᠡᠰᠡᠪᠡᠯ ᠳᠡᠯᠭᠡᠴᠡ ᠳᠡᠭᠡᠷ᠎ᠡ ᠲᠣᠪᠱᠢᠬᠤ',
+  trTitle:'📋 ᠥᠨᠥᠳᠥᠷ %d/4 ᠳᠠᠰᠬᠠᠯ ᠬᠢᠯ᠎ᠡ᠃',
+  trTypes:[
+    {id:'str',n:'ᠴᠢᠯᠠᠭᠤ ᠥᠷᠭᠦᠬᠦ',ico:'🏋️',d:'20 ᠤᠳᠠᠭ᠎ᠠ Click!',g:'🗡️ ᠬᠦᠴᠦ +2',stat:'str',k:'click',tgt:20},
+    {id:'spd',n:'ᠭᠦᠶᠦᠯᠲᠡ',ico:'🏃',d:'3ᠰ-ᠳ ᠠᠯᠢ ᠪᠣᠯᠬᠤ ᠣᠯᠠᠨ ᠤᠳᠠᠭ᠎ᠠ SPACE ᠳᠠᠷᠤ!',g:'⚡ ᠬᠤᠷᠳᠤ +2',stat:'spd',k:'spam',tgt:25},
+    {id:'bal',n:'ᠲᠡᠩᠴᠡᠪᠦᠷᠢ',ico:'🧘',d:'SPACE 3 ᠰᠧᠺᠦᠨ᠋ᠳ᠋ ᠪᠠᠷᠢ!',g:'⚖️ ᠲᠡᠩᠴᠡᠪᠦᠷᠢ +2',stat:'bal',k:'hold',tgt:3},
+    {id:'end',n:'ᠤᠶᠠᠭ᠎ᠠ',ico:'🐎',d:'30 ᠤᠳᠠᠭ᠎ᠠ SPACE/X ᠳᠠᠷᠤ!',g:'❤️ ᠲᠡᠰᠪᠦᠷᠢ +2',stat:'end',k:'spam',tgt:30}
+  ],
+  trDone:'✅ ᠳᠠᠭᠤᠰᠤᠯ᠎ᠠ',trFinish:'💪 ᠳᠠᠰᠬᠠᠯ ᠳᠠᠭᠤᠰᠤᠯ᠎ᠠ!',trGain:'+12 XP',
+  mgStart:'🚀 ᠡᠬᠢᠯᠡᠬᠦ',mgCancel:'✕ ᠪᠣᠯᠢᠬᠤ',mgClick:'👆 ᠳᠠᠷᠤ!',
+  tourLevels:[
+    {n:'ᠰᠤᠮᠤᠨ ᠤ ᠨᠠᠭᠠᠳᠤᠮ',ico:'🏘️',ops:[0,1,2],xp:60,gold:40,rnk:0},
+    {n:'ᠠᠢᠢᠮᠠᠭ ᠤᠨ ᠨᠠᠭᠠᠳᠤᠮ',ico:'🏙️',ops:[3,4,5],xp:120,gold:80,rnk:1},
+    {n:'ᠤᠯᠤᠰ ᠤᠨ ᠨᠠᠭᠠᠳᠤᠮ',ico:'🏛️',ops:[6,7],xp:250,gold:150,rnk:3}
+  ],
+  tourLocked:'🔒 %s ᠴᠣᠯ᠎ᠠ ᠱᠠᠭᠠᠷᠳᠠᠭᠳᠠᠨ᠎ᠠ',
+  tourDone:'✅ ᠨᠠᠭᠠᠳᠤᠮ ᠠᠮᠵᠢᠯᠲᠠᠲᠠᠢ ᠳᠠᠭᠤᠰᠤᠯ᠎ᠠ!',
+  tourEnter:'🏅 ᠨᠠᠭᠠᠳᠤᠮ ᠳᠤ ᠪᠦᠷᠢᠳᠭᠡᠭᠦᠯᠬᠦ',
+  tourFight:'⚔️ %s-ᠲᠠᠢ ᠪᠠᠷᠢᠯᠳᠤᠬᠤ',
+  tourRoundWon:'%s-ᠢ ᠢᠯᠠᠯ᠎ᠠ! ᠳᠠᠷᠠᠭᠠᠴᠢ ᠳᠠᠸᠠᠭᠠ ᠳᠤ ᠣᠷᠤᠶ᠎ᠠ᠃',
+  tourWon:'%s ᠨᠠᠭᠠᠳᠤᠮ ᠳᠤ ᠲᠡᠷᠢᠭᠦᠯᠡᠯ᠎ᠡ!',
+  tourLost:'%s ᠬᠦᠴᠦᠲᠡᠢ ᠪᠠᠢᠢᠯ᠎ᠠ᠃',
+  continueBtn:'ᠦᠷᠭᠦᠯᠵᠢᠯᠡᠬᠦ',
+  shopGold:'ᠠᠯᠲᠠ',ownedBadge:'✅ ᠡᠵᠡᠮᠰᠢᠵᠦ ᠪᠠᠢᠢᠨ᠎ᠠ',buyBtn:'ᠬᠤᠳᠠᠯᠳᠤᠨ ᠠᠪᠬᠤ',buyDone:'ᠠᠮᠵᠢᠯᠲᠠᠲᠠᠢ!',
+  achLocked:'ᠨᠤᠭᠤᠭᠳᠠᠭᠰᠠᠨ ᠠᠮᠵᠢᠯᠲᠠ',
+  cosTitle:'🎽 ᠵᠣᠳᠤᠭ ᠰᠣᠩᠭᠣᠬᠤ',devTitle:'🦅 ᠳᠡᠪᠡᠬᠦ ᠶᠣᠰᠣᠯᠠᠯ',
+  devText:'ᠪᠠᠷᠢᠯᠳᠤᠭᠠᠨ ᠤ ᠡᠮᠦᠨ᠎ᠡ ᠪᠤᠯᠤᠨ ᠳᠠᠷᠠᠭ᠎ᠠ ᠪᠥᠬᠡ ᠪᠦᠷᠭᠦᠳ ᠰᠢᠭ ᠭᠠᠷᠠᠭ ᠢᠶᠠᠨ ᠳᠡᠯᠭᠡᠵᠦ ᠳᠡᠪᠡᠳᠡᠭ — ᠬᠦᠨᠳᠦᠳᠬᠡᠯ ᠦᠨ ᠲᠡᠮᠳᠡᠭ᠃',
+  quizTitle:'❓ ᠮᠡᠳᠡᠯᠭᠡ ᠶᠢᠨ ᠲᠡᠰᠲ',
+  quizScore:'ᠠᠰᠠᠭᠤᠯᠲᠠ %d/%d · ᠣᠨᠣᠭ᠎ᠠ: %d',
+  quizDone:'ᠲᠡᠰᠲ ᠳᠠᠭᠤᠰᠤᠯ᠎ᠠ!',quizScore2:'ᠣᠨᠣᠭ᠎ᠠ: %d/%d',
+  quizRetry:'ᠳᠠᠬᠢᠨ ᠥᠭᠬᠦ',quizNext:'ᠳᠠᠷᠠᠭᠠᠴᠢ →',
+  welcomeTitle:'ᠲᠠᠯᠠᠷᠬᠠᠭᠰᠠᠨ! 🎉',
+  welcomeMsg:'ᠶᠠᠪᠤᠳᠠᠯ ᠡᠬᠢᠯᠡᠯ᠎ᠡ!\n📌 ᠳᠠᠰᠬᠠᠯ ᠬᠢᠭᠡᠳ ᠪᠠᠷᠢᠯᠳᠤᠭᠠᠨ ᠳᠤ ᠣᠷᠤᠭᠠᠷᠠᠢ᠃\n📌 ᠨᠠᠴᠢᠨ ᠴᠣᠯᠠᠨᠠᠴᠠ ᠡᠬᠢᠯᠡᠨ᠎ᠡ ✊',
+  gotIt:'ᠣᠶᠢᠯᠠᠭᠠᠯ᠎ᠠ!',
+  newDayTitle:'🌅 ᠰᠢᠨ᠎ᠡ ᠡᠳᠦᠷ',
+  newDayMsg:'ᠡᠳᠦᠷ %d ᠡᠬᠢᠯᠡᠯ᠎ᠡ! ᠰᠲ᠋ᠠᠮᠢᠨᠠ ᠰᠡᠷᠭᠡᠯ᠎ᠡ᠃',
+  rankUpTitle:'ᠰᠢᠨ᠎ᠡ ᠴᠣᠯ᠎ᠠ! %s',rankUpMsg:'ᠪᠠᠶᠠᠷ ᠬᠦᠷᠭᠡᠶ᠎ᠡ! ᠰᠢᠨ᠎ᠡ ᠴᠣᠯᠠᠲᠠᠢ ᠪᠣᠯᠯ᠎ᠠ!',
+  moveTitle:'ᠰᠢᠨ᠎ᠡ ᠮᠡᠬᠡ: %s',
+  achTitle:'ᠠᠮᠵᠢᠯᠲᠠ: %s',
+  challengeDone:'🎯 ᠳᠠᠭᠠᠯᠳᠠᠪᠤᠷᠢ ᠪᠡᠶᠡᠯᠡᠯ᠎ᠡ!',challengeMsg:'+%dXP +%d🪙',
+  presets:['ᠪᠠᠭᠠᠲᠤᠷ','ᠮᠥᠩᠬᠡ','ᠡᠷᠳᠡᠨᠢ','ᠴᠢᠩᠭᠢᠰ','ᠪᠤᠶᠠᠨᠲᠤ'],
+  challengeList:[
+    {ico:'⚔️',t:'ᠪᠠᠷᠢᠯᠳᠤᠭᠠᠨ',d:'1 ᠪᠠᠷᠢᠯᠳᠤᠭᠠᠨ ᠢᠯᠠᠬᠤ',type:'win',n:1,xp:20,gold:10},
+    {ico:'💪',t:'ᠳᠠᠰᠬᠠᠯᠴᠢ',d:'3 ᠳᠠᠰᠬᠠᠯ ᠬᠢᠬᠦ',type:'train',n:3,xp:15,gold:8},
+    {ico:'🏅',t:'ᠪᠡᠯᠲᠡᠭᠡᠯ',d:'ᠳᠠᠰᠬᠠᠯ ᠪᠦᠷᠢ ᠶᠢ ᠬᠢᠬᠦ',type:'train',n:4,xp:25,gold:15},
+    {ico:'⚔️',t:'ᠬᠤᠶᠠᠷ ᠢᠯᠠᠯᠲᠠ',d:'2 ᠪᠠᠷᠢᠯᠳᠤᠭᠠᠨ ᠢᠯᠠᠬᠤ',type:'win',n:2,xp:30,gold:20}
+  ],
+  historyTitle:'📖 ᠪᠥᠬᠡ ᠶᠢᠨ ᠲᠡᠦᠬᠡ',
+  historyText:'ᠮᠣᠩᠭᠣᠯ ᠪᠥᠬᠡ ᠮᠠᠨ ᠤ ᠡᠷᠢᠨ ᠦ ᠡᠮᠦᠨ᠎ᠡ ᠡᠴᠡ ᠤᠯᠠᠮᠵᠢᠯᠠᠭᠳᠠᠨ ᠢᠷᠡᠭᠰᠡᠨ᠃\n\nᠨᠠᠭᠠᠳᠤᠮ ᠵᠢᠯ ᠪᠦᠷᠢ 7-ᠳᠤᠭᠠᠷ ᠰᠠᠷ᠎ᠠ ᠶᠢᠨ 11-13-ᠨᠳᠤ ᠪᠣᠯᠳᠠᠭ᠃ ᠪᠥᠬᠡ᠂ ᠰᠤᠷ ᠬᠠᠷᠪᠤᠭ᠎ᠠ᠂ ᠮᠣᠷᠢᠨ ᠤᠶᠠᠭ᠎ᠠ — ᠡᠷᠢ ᠶᠢᠨ ᠭᠤᠷᠪᠠᠨ ᠨᠠᠭᠠᠳᠤᠮ᠃'
+}
+};
+
+// ═══ STATE ═══
+let lang = 'mn';
+let gs = null; // null until game starts
+let curPanel = 'home';
+let battleState = null;
+let timingAnim = null;
+let activeTraining = null;
+let tourState = null;
+let quizState = null;
+
+// ═══ SCREENS ═══
+function goScr(id) {
+  document.querySelectorAll('.scr').forEach(s => s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  if(id==='s-htp') buildHtp();
+  if(id==='s-about') buildAbout();
+}
+
+// ═══ LANGUAGE ═══
+function setLang(l) {
+  lang = l;
+  ['mn','en','tr'].forEach(x => {
+    const b = document.getElementById('lp-'+x);
+    if(b) b.classList.toggle('on', x===l);
+    const g = document.getElementById('gl-'+x);
+    if(g) g.classList.toggle('on', x===l);
+  });
+  document.body.className = l==='tr' ? 'lang-trad' : '';
+  const t = S[l];
+  // start screen
+  el('sTitle').textContent = t.gameTitle;
+  el('sSub').textContent = t.gameSub;
+  el('sTag').textContent = t.tagline;
+  buildStartMenu();
+  // new game screen
+  el('ngTitle').textContent = t.ngTitle;
+  el('ngSub').textContent = t.ngSub;
+  el('ngStartBtn').textContent = t.ngStart;
+  el('ngBackBtn').textContent = t.btnBack;
+  buildPresets();
+  buildHtp();
+  buildAbout();
+  // in-game
+  if(gs) {
+    el('ghLogo').textContent = t.gameTitle;
+    el('ghName').textContent = gs.name;
+    buildNav();
+    renderPanel(curPanel);
+  }
+}
+
+function el(id){ return document.getElementById(id); }
+function t(){ return S[lang]; }
+
+// ═══ START MENU ═══
+function buildStartMenu() {
+  const tx = S[lang];
+  el('sMenu').innerHTML = `
+    <button class="s-mbtn primary" onclick="goScr('s-ng')">${tx.btnPlay}</button>
+    <button class="s-mbtn" onclick="goScr('s-htp')">${tx.btnHtp}</button>
+    <button class="s-mbtn" onclick="goScr('s-about')">${tx.btnAbout}</button>
+  `;
+}
+
+function buildPresets() {
+  const tx = S[lang];
+  el('ngPresets').innerHTML = tx.presets.map(p =>
+    `<button class="ng-pre" onclick="el('nameIn').value='${p}'">${p}</button>`
+  ).join('');
+}
+
+// ═══ HOW TO PLAY ═══
+function buildHtp() {
+  const tx = S[lang];
+  el('htpWrap').innerHTML = `
+    <button class="sub-back" onclick="goScr('s-start')">← ${tx.btnBack.replace(/^←\s*/,'')}</button>
+    <div class="sub-title">${tx.htpTitle}</div>
+    <p class="sub-intro">${tx.htpIntro}</p>
+    <div class="sub-card"><h3>${tx.htpGoal}</h3><p>${tx.htpGoalTxt}</p></div>
+    <div class="sub-card"><h3>${tx.htpBattle}</h3><p>${tx.htpBatTxt}</p>
+      <div class="htp-g2">
+        <div class="htp-box"><div class="bi">🎯</div><h4>Timing Bar</h4><p>${tx.bRuleTiming}</p></div>
+        <div class="htp-box"><div class="bi">⚡</div><h4>Stamina</h4><p>${tx.bNoStam}</p></div>
+      </div>
+      <div class="td-bar"><div class="td-zone"></div><div class="td-cur"></div></div>
+    </div>
+    <div class="sub-card"><h3>${tx.htpTrain}</h3><p>${tx.htpTrainTxt}</p></div>
+    <div class="sub-card"><h3>${tx.htpRanks}</h3><p>${tx.htpRanksTxt}</p>
+      <div class="rank-row">${tx.ranks.map((r,i)=>`<div class="rr-node"><div class="rr-ico">${['🦅','🦆','🐘','🦅','🦁','👑'][i]}</div><div>${r}</div></div>${i<5?'<span style="color:rgba(212,175,55,.4)">→</span>':''}`).join('')}</div>
+    </div>
+    <div class="sub-card"><h3>${tx.htpShop}</h3><p>${tx.htpShopTxt}</p></div>
+  `;
+}
+
+// ═══ ABOUT ═══
+function buildAbout() {
+  const tx = S[lang];
+  el('aboutWrap').innerHTML = `
+    <button class="sub-back" onclick="goScr('s-start')">← ${tx.btnBack.replace(/^←\s*/,'')}</button>
+    <div class="sub-title">${tx.aboutTitle}</div>
+    <p class="sub-intro">${tx.aboutIntro}</p>
+    <div class="sub-card"><h3>${tx.aH}</h3><p>${tx.aHt}</p></div>
+    <div class="sub-card"><h3>${tx.aR}</h3><p>${tx.aRt}</p></div>
+    <div class="sub-card"><h3>${tx.aDev}</h3><p>${tx.aDevt}</p></div>
+    <div class="sub-card"><h3>${tx.aZ}</h3><p>${tx.aZt}</p></div>
+    <div class="sub-card"><h3>${t().historyTitle}</h3><p style="white-space:pre-line">${tx.historyText}</p></div>
+  `;
+}
+
+// ═══ NEW GAME ═══
+function doStart() {
+  const name = el('nameIn').value.trim() || S[lang].presets[0];
+  const tx = S[lang];
+  gs = {
+    name, lang,
+    rank:0, xp:0, gold:30,
+    day:1, wins:0, losses:0,
+    stamina:100, maxStam:100,
+    str:10, spd:10, bal:10, end:10,
+    moves:[0,1], // unlocked move indices
+    shopOwned:[true,false,false,false,false,false],
+    equip:0,
+    achs:{},
+    daily:{trains:0, battleWon:0, challengeIdx:Math.floor(Math.random()*tx.challengeList.length)},
+    tourDone:[false,false,false],
+    costume:0,
+    quizScore:0
+  };
+  goScr('s-game');
+  el('ghLogo').textContent = tx.gameTitle;
+  el('ghName').textContent = name;
+  buildNav();
+  renderPanel('home');
+  updateHeader();
+  showModal(tx.welcomeTitle, '🎉', gs.name+' '+tx.welcomeMsg, [{l:tx.gotIt}]);
+}
+
+// ═══ HEADER ═══
+function updateHeader() {
+  if(!gs) return;
+  const tx = S[lang];
+  const ri = gs.rank;
+  el('hStr').innerHTML = `🗡️<span>${gs.str}</span>`;
+  el('hSpd').innerHTML = `⚡<span>${gs.spd}</span>`;
+  el('hBal').innerHTML = `⚖️<span>${gs.bal}</span>`;
+  el('hEnd').innerHTML = `❤️<span>${gs.end}</span>`;
+  el('hRank').textContent = tx.ranks[ri];
+  el('hGold').textContent = gs.gold;
+  el('ghName').textContent = gs.name;
+}
+
+// ═══ NAV ═══
+function buildNav() {
+  const tx = S[lang];
+  const navItems = [
+    {id:'home',ico:'🏠',lbl:tx.navHome},
+    {id:'battle',ico:'⚔️',lbl:tx.navBattle},
+    {id:'train',ico:'💪',lbl:tx.navTrain},
+    {id:'tour',ico:'🏅',lbl:tx.navTour},
+    {id:'shop',ico:'🛒',lbl:tx.navShop},
+    {id:'ach',ico:'🏆',lbl:tx.navAch},
+    {id:'mus',ico:'📚',lbl:tx.navMus},
+    {id:'cult',ico:'🏛️',lbl:tx.navCult}
+  ];
+  el('gNav').innerHTML = navItems.map(n =>
+    `<button class="nb${curPanel===n.id?' on':''}" onclick="renderPanel('${n.id}')"><span class="ni">${n.ico}</span>${n.lbl}</button>`
+  ).join('') + `<button class="nb" onclick="exitGame()" style="margin-top:auto;color:rgba(255,100,100,.7)"><span class="ni">🚪</span>${tx.navExit}</button>`;
+}
+
+function renderPanel(id) {
+  curPanel = id;
+  document.querySelectorAll('.pnl').forEach(p => p.classList.remove('on'));
+  el('p-'+id).classList.add('on');
+  buildNav();
+  switch(id) {
+    case 'home': buildHome(); break;
+    case 'battle': buildBattle(); break;
+    case 'train': buildTrain(); break;
+    case 'tour': buildTour(); break;
+    case 'shop': buildShop(); break;
+    case 'ach': buildAch(); break;
+    case 'mus': buildMus(); break;
+    case 'cult': buildCult(); break;
+  }
+}
+
+function renderCurrentPanel(){ renderPanel(curPanel); }
+
+function exitGame() {
+  gs = null; battleState = null; timingAnim = null; activeTraining = null;
+  curPanel = 'home';
+  goScr('s-start');
+}
+
+// ═══ HOME ═══
+function buildHome() {
+  const tx = S[lang];
+  const ri = gs.rank;
+  const nxp = tx.rankXps[ri+1]||9999;
+  const pct = Math.min(100, Math.round(((gs.xp - tx.rankXps[ri]) / (nxp - tx.rankXps[ri])) * 100));
+  const rankIcos = ['🦅','🦆','🐘','🦅','🦁','👑'];
+  const ch = tx.challengeList[gs.daily.challengeIdx];
+  const chProg = ch.type==='win' ? gs.daily.battleWon : gs.daily.trains;
+  const chDone = chProg >= ch.n;
+
+  el('p-home').innerHTML = `
+    <div class="ptitle">${tx.ptHome}</div>
+    <div class="wrow">
+      <div class="wbox"><div class="wn">${gs.day}</div><div class="wl">${tx.dayLabel}</div></div>
+      <div class="wbox"><div class="wn">${gs.wins}</div><div class="wl">${tx.winLabel}</div></div>
+      <div class="wbox"><div class="wn">${gs.losses}</div><div class="wl">${tx.loseLabel}</div></div>
+      <div class="wbox"><div class="wn">🪙${gs.gold}</div><div class="wl">${tx.shopGold}</div></div>
+    </div>
+    <div class="card">
+      <h3>${tx.xpLabel} — ${tx.ranks[ri]}</h3>
+      <div style="display:flex;justify-content:space-between;font-size:.73em;color:rgba(255,255,255,.5);margin-bottom:3px">
+        <span>${gs.xp} XP</span><span>${ri<5?nxp+' XP':tx.ranks[5]}</span>
+      </div>
+      <div class="xp-bar"><div class="xp-fill" style="width:${ri<5?pct:100}%"></div></div>
+    </div>
+    <div class="card">
+      <h3>${tx.rankPath}</h3>
+      <div class="rpath">${tx.ranks.map((r,i)=>`<div class="rnode">
+        <div class="rcirc ${i===ri?'c':i<ri?'a':''}">${rankIcos[i]}</div>
+        <div class="rname">${r}</div>
+      </div>${i<5?'<span class="rarrow">→</span>':''}`).join('')}</div>
+    </div>
+    <div class="g2">
+      <div class="card">
+        <h3>${tx.statsCard}</h3>
+        ${['str','spd','bal','end'].map((s,i)=>`
+        <div class="srow">
+          <span class="slbl">${[tx.statStr,tx.statSpd,tx.statBal,tx.statEnd][i]}</span>
+          <div class="sbar"><div class="sfill" style="width:${Math.min(100,gs[s]*2.5)}%;background:${['#e74c3c','#f39c12','#27ae60','#3498db'][i]}"></div></div>
+          <span class="sval">${gs[s]}</span>
+        </div>`).join('')}
+      </div>
+      <div class="card">
+        <h3>${tx.todayStatus}</h3>
+        <div class="ib">${tx.trainDoneOf}: ${gs.daily.trains}/4</div>
+        <div class="ib ${gs.daily.battleWon>0?'green':''}">${lang==='mn'?'Барилдаан':lang==='en'?'Battle':'ᠪᠠᠷᠢᠯᠳᠤᠭᠠᠨ'}: ${gs.daily.battleWon>0?tx.battleDoneY:tx.battleDoneN}</div>
+        <div class="ib blue" style="margin-top:6px">⚡ ${lang==='mn'?'Стамина':lang==='en'?'Stamina':'ᠰᠲ᠋ᠠᠮᠢᠨᠠ'}: ${gs.stamina}/${gs.maxStam}</div>
+        <button class="btn btn-g btn-sm" style="margin-top:8px;width:100%;justify-content:center" onclick="newDay()">${tx.btnNewDay}</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>${tx.dailyCh}</h3>
+      <div class="ch-item ${chDone?'done':''}">
+        <span style="font-size:1.4em">${ch.ico}</span>
+        <div style="flex:1">
+          <div style="font-size:.82em;font-weight:bold;color:var(--gold)">${ch.t}</div>
+          <div style="font-size:.74em;color:rgba(255,255,255,.55)">${ch.d}</div>
+          <div class="ch-prog"><div class="ch-pf" style="width:${Math.min(100,chProg/ch.n*100)}%"></div></div>
+        </div>
+        <div style="font-size:.72em;text-align:right;color:var(--gold)">${chDone?'✅':chProg+'/'+ch.n}<br>+${ch.xp}XP +${ch.gold}🪙</div>
+      </div>
+    </div>
+  `;
+}
+
+function newDay() {
+  gs.day++;
+  gs.stamina = gs.maxStam;
+  gs.daily = {trains:0, battleWon:0, challengeIdx:Math.floor(Math.random()*S[lang].challengeList.length)};
+  updateHeader();
+  buildHome();
+  const tx = S[lang];
+  showModal(tx.newDayTitle,'🌅',sprintf(tx.newDayMsg,gs.day),[{l:tx.gotIt}]);
+}
+
+// ═══ BATTLE ═══
+function buildBattle() {
+  const tx = S[lang];
+  el('p-battle').innerHTML = `
+    <div class="ptitle">${tx.ptBattle}</div>
+    <div class="ib blue">${tx.oppSelectTitle}</div>
+    <div class="osel">${tx.opps.map((o,i)=>{
+      const locked = o.rank > gs.rank;
+      return `<div class="ocard ${locked?'lk':''}" onclick="${locked?'':'selectOpp('+i+')'}">
+        <div class="oico">${o.ico}</div>
+        <div class="oname">${o.n}</div>
+        <div class="odesc">${o.d}</div>
+        <div style="font-size:.7em">${o.diff}</div>
+        ${locked?`<div style="font-size:.7em;color:rgba(255,100,100,.8);margin-top:4px">${tx.oppLocked}</div>`:''}
+      </div>`;
+    }).join('')}</div>
+  `;
+}
+
+let oppIdx = -1;
+function selectOpp(i) {
+  oppIdx = i;
+  const tx = S[lang];
+  const o = tx.opps[i];
+  battleState = {
+    pHp: gs.end*3+20, pMaxHp: gs.end*3+20,
+    eHp: o.hp, eMaxHp: o.hp,
+    stam: gs.stamina, maxStam: gs.maxStam,
+    opp: o, oppIdx: i,
+    phase:'select', log:[], turn:0, active:true
+  };
+  renderBattleUI();
+}
+
+function renderBattleUI() {
+  if(!battleState) return;
+  const tx = S[lang];
+  const b = battleState;
+  const pPct = Math.max(0,b.pHp/b.pMaxHp*100);
+  const ePct = Math.max(0,b.eHp/b.eMaxHp*100);
+  const moves = gs.moves.map(i=>tx.moves[i]);
+
+  el('p-battle').innerHTML = `
+    <div class="ptitle">${tx.ptBattle}</div>
+    <canvas id="bCanvas" width="540" height="130"></canvas>
+    <div class="bhprow">
+      <div class="bcp">
+        <div class="bcn"><span>${gs.name}</span><span>${b.pHp}/${b.pMaxHp}</span></div>
+        <div class="bhb"><div class="bhf p-hp" id="bPhp" style="width:${pPct}%"></div></div>
+        <div style="font-size:.68em;color:rgba(255,255,255,.4);margin-top:2px">⚡ ${b.stam}/${b.maxStam}</div>
+      </div>
+      <div style="padding:0 8px;align-self:center;font-size:.9em;color:var(--gold)">VS</div>
+      <div class="bcp">
+        <div class="bcn"><span>${b.opp.n}</span><span>${b.eHp}/${b.eMaxHp}</span></div>
+        <div class="bhb"><div class="bhf e-hp" id="bEhp" style="width:${ePct}%"></div></div>
+      </div>
+    </div>
+    <div class="b-rule" id="bRule">${b.phase==='select'?tx.bRuleSelect:tx.bRuleTiming}</div>
+    <div class="tw" id="timingWrap" style="display:${b.phase==='timing'?'block':'none'}">
+      <div class="tlbl" id="timingLbl"></div>
+      <div class="tbar" id="timingBar" onclick="timingTap()">
+        <div class="tz" id="tZone"></div>
+        <div class="tc" id="tCursor"></div>
+      </div>
+      <div class="thint">${tx.bTimingHint} 👆</div>
+    </div>
+    <div class="mgrid" id="moveGrid">${moves.map((m,idx)=>`
+      <button class="mb" onclick="pickMove(${gs.moves[idx]})" ${b.phase!=='select'||b.stam<m.c?'disabled':''}>
+        <span class="mn">${m.ico} ${m.n}</span>
+        <span class="ms">${m.s}</span>
+        <div class="mst"><span class="mp">💥${m.p}</span><span class="mc2">⚡${m.c}</span><span style="color:rgba(255,255,255,.4)">🎯${Math.round(m.h*100)}%</span></div>
+      </button>`).join('')}
+    </div>
+    <div class="blog" id="bLog">${b.log.map(l=>`<div class="le ${l.t}">${l.m}</div>`).join('')}</div>
+    <button class="btn btn-b btn-sm" style="margin-top:6px" onclick="buildBattle()">← ${tx.bHome}</button>
+  `;
+  drawBattleCanvas();
+  if(b.phase==='timing') startTiming();
+}
+
+function drawBattleCanvas() {
+  const cv = el('bCanvas');
+  if(!cv) return;
+  const ctx = cv.getContext('2d');
+  ctx.clearRect(0,0,540,130);
+  // background
+  ctx.fillStyle='#080f1e';
+  ctx.fillRect(0,0,540,130);
+  // players
+  ctx.font='70px serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText('🤼',540/4,65);
+  ctx.fillText('🤼',540*3/4,65);
+  ctx.font='bold 13px Arial'; ctx.fillStyle='rgba(212,175,55,.8)';
+  ctx.fillText(gs.name,540/4,110);
+  if(battleState) ctx.fillText(battleState.opp.n,540*3/4,110);
+  ctx.fillStyle='rgba(212,175,55,.15)';
+  ctx.fillRect(540/2-1,20,2,90);
+}
+
+let selectedMove = null;
+function pickMove(moveIdx) {
+  if(!battleState || battleState.phase!=='select') return;
+  selectedMove = moveIdx;
+  battleState.phase = 'timing';
+  const tx = S[lang];
+  el('bRule').textContent = tx.bRuleTiming;
+  renderBattleUI();
+}
+
+let timingPos = 0, timingDir = 1, timingSpeed = 2.2;
+function startTiming() {
+  if(timingAnim) cancelAnimationFrame(timingAnim);
+  timingPos = 0; timingDir = 1;
+  const bar = el('timingBar'); if(!bar) return;
+  const bw = bar.offsetWidth || 300;
+  const curW = 18;
+  const zoneStart = 0.35, zoneW = 0.22;
+  const zone = el('tZone');
+  if(zone){ zone.style.left = (zoneStart*100)+'%'; zone.style.width = (zoneW*100)+'%'; }
+  const tx = S[lang];
+  if(selectedMove!==null){
+    const m = tx.moves[selectedMove];
+    el('timingLbl') && (el('timingLbl').textContent = m.ico+' '+m.n+' — '+m.s);
+  }
+  function animate(){
+    timingPos += timingDir * timingSpeed / (bw - curW) * 100;
+    if(timingPos >= 79){ timingPos=79; timingDir=-1; }
+    if(timingPos <= 0){ timingPos=0; timingDir=1; }
+    const cur = el('tCursor');
+    if(cur) cur.style.left = timingPos+'%';
+    timingAnim = requestAnimationFrame(animate);
+  }
+  timingAnim = requestAnimationFrame(animate);
+}
+
+function timingTap(){ doTimingResult(); }
+document.addEventListener('keydown', function(e){
+  if(e.code==='Space' && battleState && battleState.phase==='timing'){
+    e.preventDefault();
+    doTimingResult();
+  }
+});
+// Touch tap anywhere on screen to fire timing
+document.addEventListener('touchstart', function(e){
+  if(battleState && battleState.phase==='timing'){
+    e.preventDefault();
+    doTimingResult();
+  }
+},{passive:false});
+
+function doTimingResult() {
+  if(!battleState || battleState.phase!=='timing') return;
+  if(timingAnim){ cancelAnimationFrame(timingAnim); timingAnim=null; }
+  const tx = S[lang]; const b = battleState;
+  const m = tx.moves[selectedMove];
+  const zoneStart=35, zoneEnd=57;
+  const perfect = timingPos>=zoneStart && timingPos<=zoneEnd;
+  const hit = perfect || (Math.random()<m.h);
+  const mult = perfect ? 1.5 : 1;
+  b.phase = 'enemy';
+  if(b.stam < m.c){ bLog(tx.bNoStam,'i'); }
+  else {
+    b.stam = Math.max(0, b.stam - m.c);
+    if(hit){
+      const dmg = Math.round((m.p + gs.str*0.5) * mult * (0.85+Math.random()*0.3));
+      b.eHp = Math.max(0, b.eHp - dmg);
+      if(perfect) bLog(tx.bPerfect,'s');
+      bLog(sprintf(tx.bHit, m.n, b.opp.n, dmg),'s');
+      floatDmg(dmg,'#2ecc71');
+    } else {
+      bLog(sprintf(tx.bMiss, m.n),'f');
+    }
+  }
+  if(b.eHp <= 0){ endBattle(true); return; }
+  // enemy turn
+  setTimeout(()=>enemyTurn(), 700);
+}
+
+function enemyTurn() {
+  if(!battleState) return;
+  const tx = S[lang]; const b = battleState;
+  const opp = tx.opps[b.oppIdx];
+  const movePool = tx.moves.filter((_,i)=>i<=opp.rank+1);
+  const em = movePool[Math.floor(Math.random()*movePool.length)];
+  const ehit = Math.random() < em.h;
+  el('bRule') && (el('bRule').textContent = sprintf(tx.bRuleEnemy, opp.n));
+  if(ehit){
+    const edm = Math.round((em.p + opp.str*0.4) * (0.8+Math.random()*0.4));
+    b.pHp = Math.max(0, b.pHp - edm);
+    bLog(sprintf(tx.bEHit, opp.ico, opp.n, em.n, edm),'e');
+    floatDmg(edm,'#e74c3c');
+  } else {
+    bLog(sprintf(tx.bEMiss, opp.ico, opp.n, em.n),'n');
+  }
+  if(b.pHp <= 0){ endBattle(false); return; }
+  b.phase = 'select';
+  el('bRule') && (el('bRule').textContent = tx.bRulePlayer);
+  renderBattleUI();
+}
+
+function endBattle(won) {
+  if(timingAnim){ cancelAnimationFrame(timingAnim); timingAnim=null; }
+  const tx = S[lang]; const b = battleState;
+  const opp = tx.opps[b.oppIdx];
+  gs.stamina = Math.max(0, b.stam);
+  if(won){
+    gs.wins++; gs.xp += opp.xp; gs.gold += opp.gold;
+    gs.daily.battleWon++;
+    checkRankUp(); checkAchs();
+    const ch = tx.challengeList[gs.daily.challengeIdx];
+    if(ch.type==='win' && gs.daily.battleWon>=ch.n && !gs.daily.chDone){
+      gs.daily.chDone=true; gs.xp+=ch.xp; gs.gold+=ch.gold;
+    }
+  } else { gs.losses++; }
+  updateHeader(); battleState=null;
+  showModal(
+    won?tx.bWin:tx.bLose,
+    won?'🏆':'💔',
+    won?sprintf(tx.bWinMsg,opp.n):sprintf(tx.bLoseMsg,opp.n),
+    [
+      {l:tx.bAgain, fn:()=>selectOpp(oppIdx)},
+      {l:tx.bHome, fn:()=>renderPanel('home')},
+      won?null:{l:tx.bGoTrain, fn:()=>renderPanel('train')}
+    ].filter(Boolean)
+  );
+}
+
+function bLog(msg, type='n'){
+  if(!battleState) return;
+  battleState.log.unshift({m:msg,t:type});
+  if(battleState.log.length>8) battleState.log.pop();
+  const lg = el('bLog');
+  if(lg) lg.innerHTML = battleState.log.map(l=>`<div class="le ${l.t}">${l.m}</div>`).join('');
+}
+
+function floatDmg(n, col) {
+  const d = document.createElement('div');
+  d.className='fdmg'; d.textContent='-'+n;
+  d.style.cssText=`left:${30+Math.random()*40}%;top:40%;color:${col}`;
+  document.body.appendChild(d);
+  setTimeout(()=>d.remove(),1300);
+}
+
+// ═══ RANK UP ═══
+function checkRankUp() {
+  const tx = S[lang];
+  while(gs.rank < 5 && gs.xp >= tx.rankXps[gs.rank+1]){
+    gs.rank++;
+    const mv = [2,3,4,5,6,7][gs.rank-1];
+    if(mv!==undefined && !gs.moves.includes(mv)){ gs.moves.push(mv); }
+    updateHeader();
+    setTimeout(()=>showModal(
+      sprintf(tx.rankUpTitle,tx.ranks[gs.rank]),'🏆',
+      tx.rankUpMsg,[{l:tx.gotIt}]
+    ),300);
+  }
+}
+
+function checkAchs() {
+  const tx = S[lang];
+  const checks = [
+    {id:'w1', ok: gs.wins>=1},
+    {id:'w5', ok: gs.wins>=5},
+    {id:'w20',ok: gs.wins>=20},
+    {id:'r1', ok: gs.rank>=1},
+    {id:'r3', ok: gs.rank>=3},
+    {id:'r5', ok: gs.rank>=5},
+    {id:'t10',ok: (gs.totalTrains||0)>=10},
+    {id:'m4', ok: gs.moves.length>=4},
+    {id:'g100',ok: gs.gold>=100},
+    {id:'n1', ok: gs.tourDone.some(Boolean)}
+  ];
+  checks.forEach(c=>{
+    if(c.ok && !gs.achs[c.id]){
+      gs.achs[c.id]=true;
+      const a = tx.achs.find(x=>x.id===c.id);
+      if(a) setTimeout(()=>showModal(sprintf(tx.achTitle,a.n),a.ico,a.d,[{l:tx.gotIt}]),400);
+    }
+  });
+}
+
+// ═══ TRAINING ═══
+function buildTrain() {
+  const tx = S[lang];
+  el('p-train').innerHTML = `
+    <div class="ptitle">${tx.ptTrain}</div>
+    <div class="ib">${sprintf(tx.trTitle, gs.daily.trains)}</div>
+    <div class="trgrid">${tx.trTypes.map((tr,i)=>{
+      const done = gs.daily[tr.id+'Done'];
+      return `<div class="trcard ${done?'dis':''}" onclick="${done?'':'startTrain('+i+')'}">
+        <div class="trico">${tr.ico}</div>
+        <h4>${tr.n}</h4>
+        <p>${tr.d}</p>
+        <div class="trgain">${done?tx.trDone:tr.g}</div>
+      </div>`;
+    }).join('')}</div>
+    <div class="mga" id="mga"></div>
+  `;
+}
+
+function startTrain(i) {
+  const tx = S[lang];
+  const tr = tx.trTypes[i];
+  if(gs.daily.trains>=4) return;
+  activeTraining = {idx:i, tr, count:0, done:false, timerStart:null};
+  const mga = el('mga');
+  mga.style.display='block';
+  mga.innerHTML = `
+    <h3>${tr.ico} ${tr.n}</h3>
+    <p>${tr.d}</p>
+    <div class="mga-bar"><div class="mga-fill" id="mgaFill"></div></div>
+    <div class="mga-tim" id="mgaTim">0 / ${tr.tgt}</div>
+    <div class="mga-hint">${tx.bTimingHint}</div>
+    <button class="btn btn-sm btn-r" onclick="cancelTrain()">${tx.mgCancel}</button>
+  `;
+  mga.scrollIntoView({behavior:'smooth',block:'nearest'});
+  if(tr.k==='hold') startHoldTrain(tr);
+  else if(tr.k==='click'){ mga.querySelector('.mga-bar').style.cursor='pointer'; mga.querySelector('.mga-bar').onclick=()=>trainClick(); }
+}
+
+function trainClick() {
+  if(!activeTraining||activeTraining.done) return;
+  const tr = activeTraining.tr;
+  activeTraining.count++;
+  updateTrainUI();
+  if(activeTraining.count>=tr.tgt) finishTrain();
+}
+
+let holdInterval=null;
+function startHoldTrain(tr) {
+  let held=false, elapsed=0;
+  const target=tr.tgt*1000;
+  document.addEventListener('keydown', hk); document.addEventListener('keyup', hu);
+  // Touch hold support
+  const bar = document.querySelector('.mga-bar');
+  if(bar){
+    bar.addEventListener('touchstart', ts, {passive:false});
+    bar.addEventListener('touchend', te);
+    bar.addEventListener('mousedown', ts);
+    bar.addEventListener('mouseup', te);
+  }
+  function ts(e){ e.preventDefault&&e.preventDefault(); if(!held){ held=true; activeTraining.timerStart=Date.now(); holdInterval=setInterval(()=>{ elapsed=Date.now()-activeTraining.timerStart; activeTraining.count=elapsed/1000; updateTrainUI(); if(elapsed>=target) finishTrain(); },50); } }
+  function te(){ held=false; clearInterval(holdInterval); }
+  function hk(e){ if(e.code==='Space') ts(e); }
+  function hu(e){ if(e.code==='Space') te(); }
+  activeTraining._cleanup = ()=>{
+    document.removeEventListener('keydown',hk); document.removeEventListener('keyup',hu);
+    const b=document.querySelector('.mga-bar');
+    if(b){ b.removeEventListener('touchstart',ts); b.removeEventListener('touchend',te); b.removeEventListener('mousedown',ts); b.removeEventListener('mouseup',te); }
+    clearInterval(holdInterval);
+  };
+}
+
+document.addEventListener('keydown', function(e){
+  if(e.code==='Space' && activeTraining && !activeTraining.done){
+    if(activeTraining.tr.k==='spam'){ e.preventDefault(); activeTraining.count++; updateTrainUI(); if(activeTraining.count>=activeTraining.tr.tgt) finishTrain(); }
+  }
+  if(e.code==='KeyX' && activeTraining && !activeTraining.done && activeTraining.tr.k==='spam'){
+    activeTraining.count++; updateTrainUI(); if(activeTraining.count>=activeTraining.tr.tgt) finishTrain();
+  }
+});
+
+// Click + touch for training mini-game bar
+function _trainTap(e){
+  if(!activeTraining || activeTraining.done) return;
+  if(activeTraining.tr.k==='click') trainClick();
+  else if(activeTraining.tr.k==='spam'){ activeTraining.count++; updateTrainUI(); if(activeTraining.count>=activeTraining.tr.tgt) finishTrain(); }
+}
+el('p-train').addEventListener('click', function(e){ if(e.target.closest('.mga-bar')) _trainTap(e); });
+el('p-train').addEventListener('touchstart', function(e){ if(e.target.closest('.mga-bar')){ e.preventDefault(); _trainTap(e); } },{passive:false});
+
+function updateTrainUI() {
+  if(!activeTraining) return;
+  const tr = activeTraining.tr;
+  const pct = Math.min(100, (activeTraining.count/tr.tgt)*100);
+  const fill = el('mgaFill'); if(fill) fill.style.width=pct+'%';
+  const tim = el('mgaTim'); if(tim) tim.textContent = (tr.k==='hold'?activeTraining.count.toFixed(1):activeTraining.count)+' / '+tr.tgt;
+}
+
+function finishTrain() {
+  if(!activeTraining||activeTraining.done) return;
+  activeTraining.done=true;
+  if(activeTraining._cleanup) activeTraining._cleanup();
+  const tx = S[lang];
+  const tr = activeTraining.tr;
+  gs[tr.stat] += 2; gs.xp += 12;
+  gs.daily.trains++;
+  gs.daily[tr.id+'Done'] = true;
+  gs.totalTrains = (gs.totalTrains||0)+1;
+  checkRankUp(); checkAchs(); updateHeader();
+  const mga = el('mga');
+  if(mga) mga.innerHTML = `<h3 style="color:var(--lg)">${tx.trFinish}</h3><p>${tr.g}</p><p>${tx.trGain}</p><button class="btn btn-sm" onclick="buildTrain()">${tx.gotIt}</button>`;
+  const ch = tx.challengeList[gs.daily.challengeIdx];
+  if(ch.type==='train' && gs.daily.trains>=ch.n && !gs.daily.chDone){
+    gs.daily.chDone=true; gs.xp+=ch.xp; gs.gold+=ch.gold;
+  }
+}
+
+function cancelTrain() {
+  if(activeTraining&&activeTraining._cleanup) activeTraining._cleanup();
+  activeTraining=null;
+  buildTrain();
+}
+
+// ═══ TOURNAMENT ═══
+function buildTour() {
+  const tx = S[lang];
+  el('p-tour').innerHTML = `
+    <div class="ptitle">${tx.ptTour}</div>
+    ${tx.tourLevels.map((lv,li)=>{
+      const locked = lv.rnk > gs.rank;
+      const done = gs.tourDone[li];
+      return `<div class="tlvl">
+        <h3>${lv.ico} ${lv.n} ${done?'✅':locked?'🔒':''}</h3>
+        ${locked?`<div class="ib">${sprintf(tx.tourLocked,tx.ranks[lv.rnk])}</div>`:`
+          ${done?`<div class="ib green">${tx.tourDone}</div>`:`
+            <button class="btn btn-sm" onclick="startTour(${li})">${tx.tourEnter}</button>
+          `}
+          <div style="margin-top:8px">${lv.ops.map(oi=>{const o=tx.opps[oi];return`<div class="tmatch"><span>${o.ico}</span><span>${o.n}</span><span style="margin-left:auto;font-size:.7em">${o.diff}</span></div>`;}).join('')}</div>
+        `}
+      </div>`;
+    }).join('')}
+  `;
+}
+
+function startTour(li) {
+  tourState = {li, step:0, lv:S[lang].tourLevels[li]};
+  nextTourMatch();
+}
+
+function nextTourMatch() {
+  if(!tourState) return;
+  const tx = S[lang]; const lv = tx.tourLevels[tourState.li];
+  if(tourState.step>=lv.ops.length){ gs.tourDone[tourState.li]=true; gs.xp+=lv.xp; gs.gold+=lv.gold; checkAchs(); updateHeader(); tourState=null; buildTour(); showModal(sprintf(tx.tourWon,lv.n),'🏅',tx.tourDone,[{l:tx.gotIt}]); return; }
+  const oi = lv.ops[tourState.step];
+  showModal(sprintf(tx.tourFight,tx.opps[oi].n),tx.opps[oi].ico,tx.opps[oi].d,[
+    {l:tx.tourFight.replace('%s',tx.opps[oi].n), fn:()=>{ tourBattle(oi); }},
+    {l:tx.bHome, fn:()=>{ tourState=null; buildTour(); }}
+  ]);
+}
+
+function tourBattle(oi) {
+  oppIdx = oi; tourState.step++;
+  const b = {
+    pHp: gs.end*3+20, pMaxHp: gs.end*3+20,
+    eHp: S[lang].opps[oi].hp, eMaxHp: S[lang].opps[oi].hp,
+    stam: gs.stamina, maxStam: gs.maxStam,
+    opp: S[lang].opps[oi], oppIdx: oi,
+    phase:'select', log:[], isTour:true
+  };
+  battleState = b;
+  renderPanel('battle');
+  renderBattleUI();
+}
+
+// override endBattle for tour
+const _origEnd = endBattle;
+// (no override needed; after tour win, we check tourState)
+
+// ═══ SHOP ═══
+function buildShop() {
+  const tx = S[lang];
+  el('p-shop').innerHTML = `
+    <div class="ptitle">${tx.ptShop}</div>
+    <div class="gdisplay">🪙 ${tx.shopGold}: ${gs.gold}</div>
+    <div class="shgrid">${tx.shopItems.map((item,i)=>{
+      const owned = gs.shopOwned[i];
+      return `<div class="shcard ${owned?'own':''}">
+        <div class="shico">${item.ico}</div>
+        <div class="shname">${item.n}</div>
+        <div class="shdesc">${item.d}</div>
+        <div class="shbon">${item.b}</div>
+        ${owned?`<div style="color:var(--lg);font-size:.77em">${tx.ownedBadge}</div>`:`
+          <button class="btn btn-sm" onclick="buyItem(${i})" ${gs.gold<item.p?'disabled':''}>
+            ${tx.buyBtn} 🪙${item.p}
+          </button>
+        `}
+      </div>`;
+    }).join('')}
+  `;
+}
+
+function buyItem(i) {
+  const tx = S[lang]; const item = tx.shopItems[i];
+  if(gs.gold<item.p||gs.shopOwned[i]) return;
+  gs.gold-=item.p; gs.shopOwned[i]=true;
+  if(item.st==='all'){ gs.str+=item.v; gs.spd+=item.v; gs.bal+=item.v; gs.end+=item.v; }
+  else if(item.st) gs[item.st]+=item.v;
+  updateHeader(); checkAchs(); buildShop();
+  showModal(tx.buyDone,'✅',item.n+' '+item.b,[{l:tx.gotIt}]);
+}
+
+// ═══ ACHIEVEMENTS ═══
+function buildAch() {
+  const tx = S[lang];
+  el('p-ach').innerHTML = `
+    <div class="ptitle">${tx.ptAch}</div>
+    <div class="achgrid">${tx.achs.map(a=>{
+      const u=gs.achs[a.id];
+      return `<div class="achcard ${u?'u':'lk'}">
+        <div class="achico">${a.ico}</div>
+        <div class="achname">${u?a.n:tx.achLocked}</div>
+        <div class="achdesc">${u?a.d:''}</div>
+      </div>`;
+    }).join('')}</div>
+  `;
+}
+
+// ═══ MOVE MUSEUM ═══
+function buildMus() {
+  const tx = S[lang];
+  el('p-mus').innerHTML = `
+    <div class="ptitle">${tx.ptMus}</div>
+    <div class="musgrid">${tx.moves.map((m,i)=>{
+      const u=gs.moves.includes(i);
+      return `<div class="muscard ${u?'u':'lk'}">
+        <div class="musico">${m.ico}</div>
+        <h4>${u?m.n:tx.achLocked}</h4>
+        <p>${u?m.d:'???'}</p>
+        ${u?`<div class="musstats"><span>💥${m.p}</span><span>⚡${m.c}</span><span>🎯${Math.round(m.h*100)}%</span></div>`:''}
+      </div>`;
+    }).join('')}
+  `;
+}
+
+// ═══ CULTURE ═══
+function buildCult() {
+  const tx = S[lang];
+  el('p-cult').innerHTML = `
+    <div class="ptitle">${tx.ptCult}</div>
+    <div class="card"><h3>${tx.cosTitle}</h3>
+      ${tx.costumes.map((c,i)=>`<div class="cos-item ${gs.costume===i?'on':''}" onclick="setCostume(${i})">
+        <span style="font-size:1.5em">${c.ico}</span>
+        <div><div style="font-size:.83em;color:var(--gold)">${c.n}</div><div style="font-size:.73em;color:rgba(255,255,255,.5)">${c.d}</div></div>
+      </div>`).join('')}
+    </div>
+    <div class="card"><h3>${tx.devTitle}</h3><p style="font-size:.82em;white-space:pre-line;color:rgba(255,255,255,.78);line-height:1.7">${tx.devText}</p></div>
+    <div class="card" id="quizCard"><h3>${tx.quizTitle}</h3><div id="quizArea"></div></div>
+  `;
+  startQuiz();
+}
+
+function setCostume(i){ gs.costume=i; buildCult(); }
+
+function startQuiz(){
+  quizState={q:0, score:0};
+  renderQuiz();
+}
+
+function renderQuiz(){
+  if(!quizState) return;
+  const tx=S[lang];
+  const qa=el('quizArea'); if(!qa) return;
+  if(quizState.q>=tx.quiz.length){
+    qa.innerHTML=`<div class="ib green">${tx.quizDone}</div><div class="ib">${sprintf(tx.quizScore2,quizState.score,tx.quiz.length)}</div><button class="btn btn-sm" onclick="startQuiz()">${tx.quizRetry}</button>`;
+    return;
+  }
+  const q=tx.quiz[quizState.q];
+  qa.innerHTML=`
+    <div style="font-size:.82em;margin-bottom:10px;color:rgba(255,255,255,.9)">${sprintf(tx.quizScore,quizState.q+1,tx.quiz.length,quizState.score)}</div>
+    <div style="font-size:.86em;font-weight:bold;margin-bottom:8px">${q.q}</div>
+    ${q.opts.map((o,i)=>`<div class="qopt" id="qo${i}" onclick="ansQuiz(${i})">${o}</div>`).join('')}
+    <div id="quizExpl" style="margin-top:8px;font-size:.78em;color:rgba(255,255,255,.5)"></div>
+  `;
+}
+
+function ansQuiz(i){
+  const tx=S[lang]; const q=tx.quiz[quizState.q];
+  const correct=i===q.a;
+  if(correct) quizState.score++;
+  document.querySelectorAll('.qopt').forEach((o,idx)=>{
+    o.classList.add(idx===q.a?'cor':idx===i&&!correct?'wrg':'');
+    o.style.pointerEvents='none';
+  });
+  el('quizExpl').textContent=q.e;
+  setTimeout(()=>{ quizState.q++; renderQuiz(); },1800);
+}
+
+// ═══ MODAL ═══
+function showModal(title, ico, msg, btns) {
+  el('mT').textContent=title; el('mI').textContent=ico;
+  el('mP').innerHTML=msg.replace(/\n/g,'<br>');
+  el('mX').innerHTML='';
+  el('mB').innerHTML=btns.map((b,i)=>`<button class="btn ${i===0?'btn-r':'btn-b'} btn-sm" onclick="closeModal(${i})">${b.l}</button>`).join('');
+  el('modal')._btns=btns;
+  el('modal').classList.add('on');
+}
+function closeModal(i){
+  const btns=el('modal')._btns;
+  el('modal').classList.remove('on');
+  if(btns&&btns[i]&&btns[i].fn) btns[i].fn();
+}
+
+// ═══ UTIL ═══
+function sprintf(s,...a){ let i=0; return s.replace(/%[sd]/g,()=>a[i++]??''); }
+
+// ═══ INIT ═══
+(function init(){
+  setLang('mn');
+  goScr('s-start');
+})();
+</script>
 </body>
-
 </html>
