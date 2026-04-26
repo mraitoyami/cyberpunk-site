@@ -575,7 +575,7 @@ body.lang-trad{font-family:"Noto Serif Mongolian","Segoe UI",serif}
 <div class="uov" id="uov"><div class="u-ico" id="uI"></div><div class="u-title" id="uT"></div><div class="u-desc" id="uD"></div><button class="btn" style="margin-top:14px" id="uBtn"></button></div>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script>
 
 // ══════════════════════════════════════════════════
@@ -1111,10 +1111,37 @@ function el(id){ return document.getElementById(id); }
 function t(){ return S[lang]; }
 
 // ═══ START MENU ═══
+function saveGame() {
+  if (!gs) return;
+  try { localStorage.setItem('devjee_gs', JSON.stringify(gs)); } catch(e) {}
+}
+
+function loadSavedGame() {
+  try { const d = localStorage.getItem('devjee_gs'); return d ? JSON.parse(d) : null; }
+  catch(e) { return null; }
+}
+
+function continueGame() {
+  const saved = loadSavedGame();
+  if (!saved) { goScr('s-ng'); return; }
+  gs = saved;
+  const tx = S[lang];
+  goScr('s-game');
+  el('ghLogo').textContent = tx.gameTitle;
+  el('ghName').textContent = gs.name;
+  buildNav();
+  renderPanel('home');
+  updateHeader();
+  setTimeout(submitScore, 800);
+}
+
 function buildStartMenu() {
   const tx = S[lang];
+  const saved = loadSavedGame();
+  const contLbl = lang==='mn' ? 'Үргэлжлүүлэх' : lang==='en' ? 'Continue' : 'ᠦᠷᠭᠦᠯᠵᠢᠯᠡᠬᠦ';
   el('sMenu').innerHTML = `
-    <button class="s-mbtn primary" onclick="goScr('s-ng')">${tx.btnPlay}</button>
+    ${saved ? `<button class="s-mbtn primary" onclick="continueGame()">▶  ${contLbl}: ${saved.name}</button>` : ''}
+    <button class="s-mbtn ${saved ? '' : 'primary'}" onclick="goScr('s-ng')">${tx.btnPlay}</button>
     <button class="s-mbtn" onclick="goScr('s-htp')">${tx.btnHtp}</button>
     <button class="s-mbtn" onclick="goScr('s-about')">${tx.btnAbout}</button>
   `;
@@ -1190,6 +1217,7 @@ function doStart() {
   buildNav();
   renderPanel('home');
   updateHeader();
+  saveGame();
   showModal(tx.welcomeTitle, '🎉', gs.name+' '+tx.welcomeMsg, [{l:tx.gotIt}]);
 }
 
@@ -1325,6 +1353,7 @@ function newDay() {
   gs.daily = {trains:0, battleWon:0, challengeIdx:Math.floor(Math.random()*S[lang].challengeList.length)};
   updateHeader();
   buildHome();
+  saveGame();
   setTimeout(submitScore, 500);
   const tx = S[lang];
   showModal(tx.newDayTitle,'🌅',sprintf(tx.newDayMsg,gs.day),[{l:tx.gotIt}]);
@@ -1545,7 +1574,7 @@ function endBattle(won) {
       gs.daily.chDone=true; gs.xp+=ch.xp; gs.gold+=ch.gold;
     }
   } else { gs.losses++; }
-  updateHeader(); battleState=null;
+  updateHeader(); battleState=null; saveGame();
   showModal(
     won?tx.bWin:tx.bLose,
     won?'🏆':'💔',
@@ -1727,6 +1756,7 @@ function finishTrain() {
   if(ch.type==='train' && gs.daily.trains>=ch.n && !gs.daily.chDone){
     gs.daily.chDone=true; gs.xp+=ch.xp; gs.gold+=ch.gold;
   }
+  saveGame();
 }
 
 function cancelTrain() {
@@ -1790,6 +1820,7 @@ function tourBattle(oi) {
 const _origEnd = endBattle;
 // (no override needed; after tour win, we check tourState)
 
+
 // ═══ SHOP ═══
 function buildShop() {
   const tx = S[lang];
@@ -1809,7 +1840,7 @@ function buildShop() {
           </button>
         `}
       </div>`;
-    }).join('')}
+    }).join('')}</div>
   `;
 }
 
@@ -1819,7 +1850,7 @@ function buyItem(i) {
   gs.gold-=item.p; gs.shopOwned[i]=true;
   if(item.st==='all'){ gs.str+=item.v; gs.spd+=item.v; gs.bal+=item.v; gs.end+=item.v; }
   else if(item.st) gs[item.st]+=item.v;
-  updateHeader(); checkAchs(); buildShop();
+  updateHeader(); checkAchs(); buildShop(); saveGame();
   showModal(tx.buyDone,'✅',item.n+' '+item.b,[{l:tx.gotIt}]);
 }
 
@@ -1875,10 +1906,7 @@ function buildCult() {
 
 function setCostume(i){ gs.costume=i; buildCult(); }
 
-function startQuiz(){
-  quizState={q:0, score:0};
-  renderQuiz();
-}
+function startQuiz(){ quizState={q:0,score:0}; renderQuiz(); }
 
 function renderQuiz(){
   if(!quizState) return;
@@ -1928,10 +1956,12 @@ function closeModal(i){
 function sprintf(s,...a){ let i=0; return s.replace(/%[sd]/g,()=>a[i++]??''); }
 
 // ══════════════════════════════════════════════════
-//  FIREBASE + LEADERBOARD
+//  FIREBASE REALTIME DATABASE + LEADERBOARD
 // ══════════════════════════════════════════════════
 let db = null;
 let lbTab = 'wins';
+let lbRef = null;
+let lbListener = null;
 let lbUnsubscribe = null;
 let playerId = null;
 
@@ -1939,6 +1969,7 @@ function initFirebase() {
   const cfg = {
     apiKey: "AIzaSyDAaJUkkCQVT247ZWqFNXVwK8u63UzFyHs",
     authDomain: "avargiinzam.firebaseapp.com",
+    databaseURL: "https://avargiinzam-default-rtdb.asia-southeast1.firebasedatabase.app",
     projectId: "avargiinzam",
     storageBucket: "avargiinzam.firebasestorage.app",
     messagingSenderId: "53486976666",
@@ -1947,10 +1978,10 @@ function initFirebase() {
   };
   try {
     if (!firebase.apps.length) firebase.initializeApp(cfg);
-    db = firebase.firestore();
+    db = firebase.database();
     playerId = localStorage.getItem('devjee_pid');
     if (!playerId) {
-      playerId = 'p_' + Date.now() + '_' + Math.random().toString(36).substr(2,9);
+      playerId = 'p_'+Date.now()+'_'+Math.random().toString(36).substr(2,9);
       localStorage.setItem('devjee_pid', playerId);
     }
   } catch(e) { console.warn('Firebase init failed:', e.message); }
@@ -1964,7 +1995,7 @@ async function submitScore() {
   if (!db || !gs || !playerId) return false;
   const tx = S[lang];
   try {
-    await db.collection('scores').doc(playerId).set({
+    await db.ref('scores/'+playerId).set({
       name: gs.name,
       wins: gs.wins,
       xp: gs.xp,
@@ -1973,32 +2004,33 @@ async function submitScore() {
       rankName: tx.ranks[gs.rank],
       dailyWins: gs.daily.battleWon,
       date: getToday(),
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      updatedAt: Date.now()
     });
     return true;
   } catch(e) { console.warn('Submit error:', e); return false; }
 }
 
-// ─── Leaderboard UI ───
+// ─── Label helper (all 3 langs) ───
 function lbLabel(key) {
   const map = {
-    title:   {mn:'Тэргүүлэгч',   en:'Leaderboard',   tr:'ᠲᠡᠷᠢᠭᠦᠯᠡᠭᠴᠢ'},
-    wins:    {mn:'🏆 Ялалт',      en:'🏆 Wins',        tr:'🏆 ᠢᠯᠠᠯᠲᠠ'},
-    xp:      {mn:'⭐ XP',         en:'⭐ XP',          tr:'⭐ XP'},
-    gold:    {mn:'🪙 Алт',        en:'🪙 Gold',        tr:'🪙 ᠠᠯᠲᠠ'},
-    daily:   {mn:'📅 Өнөөдөр',    en:'📅 Today',       tr:'📅 ᠥᠨᠥᠳᠥᠷ'},
-    loading: {mn:'Ачааллаж байна…',en:'Loading…',     tr:'ᠠᠴᠢᠶᠠᠯᠠᠵᠤ…'},
-    nodata:  {mn:'Бичлэг алга',   en:'No entries yet',tr:'ᠪᠢᠴᠢᠯᠭᠡ ᠠᠯᠠᠭ᠎ᠠ'},
-    submit:  {mn:'📤 Оноо илгээх',en:'📤 Submit Score',tr:'📤 ᠣᠨᠣᠭ᠎ᠠ ᠢᠯᠡᠭᠡᠬᠦ'},
-    ok:      {mn:'✅ Илгээлээ!',  en:'✅ Submitted!',  tr:'✅ ᠠᠮᠵᠢᠯᠲᠠᠲᠠᠢ!'},
-    err:     {mn:'❌ Алдаа',      en:'❌ Error',       tr:'❌ ᠠᠯᠳᠠᠭ᠎ᠠ'},
-    nofire:  {mn:'Firebase холбогдоогүй',en:'Firebase not connected',tr:'Firebase ᠬᠣᠯᠪᠤᠭᠳᠠᠭᠰᠠᠨᠤᠭᠤᠢ'},
-    live:    {mn:'Шууд',         en:'Live',           tr:'ᠱᠤᠤᠳ'},
-    you:     {mn:'Таны байр',    en:'Your rank',      tr:'ᠲᠠᠨ ᠦ ᠪᠠᠢᠷᠢ'}
+    title:   {mn:'Тэргүүлэгч',        en:'Leaderboard',          tr:'ᠲᠡᠷᠢᠭᠦᠯᠡᠭᠴᠢ'},
+    wins:    {mn:'🏆 Ялалт',           en:'🏆 Wins',              tr:'🏆 ᠢᠯᠠᠯᠲᠠ'},
+    xp:      {mn:'⭐ XP',              en:'⭐ XP',                tr:'⭐ XP'},
+    gold:    {mn:'🪙 Алт',             en:'🪙 Gold',              tr:'🪙 ᠠᠯᠲᠠ'},
+    daily:   {mn:'📅 Өнөөдөр',         en:'📅 Today',             tr:'📅 ᠥᠨᠥᠳᠥᠷ'},
+    loading: {mn:'Ачааллаж байна…',    en:'Loading…',             tr:'ᠠᠴᠢᠶᠠᠯᠠᠵᠤ…'},
+    nodata:  {mn:'Бичлэг алга одоохондоо', en:'No entries yet',   tr:'ᠪᠢᠴᠢᠯᠭᠡ ᠠᠯᠠᠭ᠎ᠠ'},
+    submit:  {mn:'📤 Оноо илгээх',     en:'📤 Submit Score',      tr:'📤 ᠣᠨᠣᠭ᠎ᠠ ᠢᠯᠡᠭᠡᠬᠦ'},
+    ok:      {mn:'✅ Амжилттай илгээлээ!', en:'✅ Score submitted!',tr:'✅ ᠠᠮᠵᠢᠯᠲᠠᠲᠠᠢ!'},
+    fail:    {mn:'❌ Алдаа гарлаа',    en:'❌ Failed to submit',  tr:'❌ ᠠᠯᠳᠠᠭ᠎ᠠ'},
+    nofire:  {mn:'Firebase холбогдоогүй', en:'Firebase not connected', tr:'Firebase ᠬᠣᠯᠪᠤᠭᠳᠠᠭᠰᠠᠨᠤᠭᠤᠢ'},
+    live:    {mn:'Шууд',               en:'Live',                 tr:'ᠱᠤᠤᠳ'},
+    nogame:  {mn:'Эхлээд тоглоорой!', en:'Start a game first!',  tr:'ᠡᠬᠢᠯᠡᠭᠡᠳ ᠲᠣᠭᠯᠠᠭᠠᠷᠠᠢ!'}
   };
   return (map[key]||{})[lang] || (map[key]||{}).en || key;
 }
 
+// ─── Build leaderboard panel ───
 function buildLb() {
   const tabs = ['wins','xp','gold','daily'];
   el('p-lb').innerHTML = `
@@ -2006,7 +2038,7 @@ function buildLb() {
       <span class="lb-live"><span class="lb-dot"></span>${lbLabel('live')}</span>
     </div>
     <div class="lb-tabs">
-      ${tabs.map(t=>`<button class="lb-tab${lbTab===t?' on':''}" onclick="switchLbTab('${t}')">${lbLabel(t)}</button>`).join('')}
+      ${tabs.map(tb=>`<button class="lb-tab${lbTab===tb?' on':''}" onclick="switchLbTab('${tb}')">${lbLabel(tb)}</button>`).join('')}
     </div>
     <div id="lbContent"><div class="lb-loading">⏳ ${lbLabel('loading')}</div></div>
     <div class="lb-submit">
@@ -2018,9 +2050,14 @@ function buildLb() {
 }
 
 function switchLbTab(tab) {
-  if(lbUnsubscribe){ lbUnsubscribe(); lbUnsubscribe=null; }
+  _lbOff();
   lbTab = tab;
   buildLb();
+}
+
+function _lbOff() {
+  if(lbRef && lbListener) { lbRef.off('value', lbListener); }
+  lbRef = null; lbListener = null; lbUnsubscribe = null;
 }
 
 function loadLbData() {
@@ -2028,49 +2065,59 @@ function loadLbData() {
     el('lbContent').innerHTML = `<div class="lb-err">🔌 ${lbLabel('nofire')}</div>`;
     return;
   }
-  const col = db.collection('scores');
-  let q;
-  if      (lbTab==='wins')  q = col.orderBy('wins','desc').limit(10);
-  else if (lbTab==='xp')    q = col.orderBy('xp','desc').limit(10);
-  else if (lbTab==='gold')  q = col.orderBy('gold','desc').limit(10);
-  else                      q = col.where('date','==',getToday()).orderBy('dailyWins','desc').limit(10);
+  const field = {wins:'wins', xp:'xp', gold:'gold', daily:'dailyWins'}[lbTab];
+  lbRef = db.ref('scores').orderByChild(field);
 
-  lbUnsubscribe = q.onSnapshot(snap => {
-    renderLbEntries(snap.docs.map((d,i)=>({id:d.id, pos:i+1, ...d.data()})));
+  lbListener = lbRef.on('value', snap => {
+    const entries = [];
+    snap.forEach(child => {
+      const d = child.val();
+      if (lbTab === 'daily' && d.date !== getToday()) return;
+      entries.push({id: child.key, ...d});
+    });
+    entries.sort((a,b) => (b[field]||0) - (a[field]||0));
+    entries.forEach((e,i) => e.pos = i+1);
+    renderLbEntries(entries);
   }, err => {
-    el('lbContent') && (el('lbContent').innerHTML = `<div class="lb-err">❌ ${err.message}</div>`);
+    const c = el('lbContent');
+    if(c) c.innerHTML = `<div class="lb-err">❌ ${err.message}</div>`;
   });
+
+  lbUnsubscribe = _lbOff;
 }
 
+// ─── Render entries ───
 function renderLbEntries(entries) {
-  const sf = {wins:'wins',xp:'xp',gold:'gold',daily:'dailyWins'}[lbTab];
+  const sf = {wins:'wins', xp:'xp', gold:'gold', daily:'dailyWins'}[lbTab];
   const medals = ['🥇','🥈','🥉'];
+  const fmt = n => Number(n||0).toLocaleString();
 
   if (!entries.length) {
     el('lbContent').innerHTML = `<div class="lb-empty">🏜️ ${lbLabel('nodata')}</div>`;
     return;
   }
 
-  const fmt = n => (n||0).toLocaleString();
   let html = '';
 
-  // ── Podium (top 3) ──
+  // ── Podium top-3 ──
   if (entries.length >= 2) {
-    const p = [entries[1]||null, entries[0]||null, entries[2]||null]; // L C R
-    const ht = ['72px','94px','56px'];
-    const cl = ['#9E9E9E','#D4AF37','#8D6E63'];
-    const md = ['🥈','🥇','🥉'];
+    // visual order: silver(L) gold(C) bronze(R)
+    const pod = [
+      {e:entries[1], ht:'72px', bg:'linear-gradient(180deg,#bdbdbd,#9e9e9e)', md:'🥈'},
+      {e:entries[0], ht:'96px', bg:'linear-gradient(180deg,#D4AF37,#9A7B0A)', md:'🥇'},
+      {e:entries[2]||null, ht:'56px', bg:'linear-gradient(180deg,#a1887f,#795548)', md:'🥉'}
+    ];
     html += `<div class="lb-podium">`;
-    p.forEach((e,i) => {
-      if (!e) { html+=`<div class="lb-pod-item"></div>`; return; }
-      const me = e.id===playerId;
+    pod.forEach(({e,ht,bg,md}) => {
+      if (!e) { html += `<div class="lb-pod-item"></div>`; return; }
+      const me = e.id === playerId;
       html += `<div class="lb-pod-item${me?' me':''}">
-        ${i===1?`<div class="lb-pod-crown">👑</div>`:''}
+        ${md==='🥇'?`<div class="lb-pod-crown">👑</div>`:''}
         <div class="lb-pod-name">${e.name||'?'}${me?' 👈':''}</div>
         <div class="lb-pod-rank-badge">${e.rankName||''}</div>
         <div class="lb-pod-score">${fmt(e[sf])}</div>
-        <div class="lb-pod-base" style="height:${ht[i]};background:linear-gradient(180deg,${cl[i]}dd,${cl[i]}88)">
-          <div style="font-size:1.9em;padding-top:4px">${md[i]}</div>
+        <div class="lb-pod-base" style="height:${ht};background:${bg}">
+          <div style="font-size:1.9em;padding-top:5px">${md}</div>
           <div class="lb-pod-pos">#${e.pos}</div>
         </div>
       </div>`;
@@ -2078,12 +2125,12 @@ function renderLbEntries(entries) {
     html += `</div>`;
   }
 
-  // ── Full ranked list ──
+  // ── Full list (all entries, no limit) ──
   html += `<div class="lb-list">`;
   entries.forEach((e,i) => {
-    const me = e.id===playerId;
+    const me = e.id === playerId;
     html += `<div class="lb-row${me?' me':''}">
-      <span class="lb-pos">${i<3?medals[i]:'#'+(i+1)}</span>
+      <span class="lb-pos">${i<3 ? medals[i] : '#'+(i+1)}</span>
       <span class="lb-name">${e.name||'?'}${me?' 👈':''}</span>
       <span class="lb-rank-chip">${e.rankName||''}</span>
       <span class="lb-score">${fmt(e[sf])}</span>
@@ -2094,13 +2141,17 @@ function renderLbEntries(entries) {
   el('lbContent').innerHTML = html;
 }
 
+// ─── Manual submit button ───
 async function doSubmitScore() {
   const btn = el('lbSubmitBtn'); const msg = el('lbSubmitMsg');
-  if (!gs) { if(msg) msg.textContent='⚠️ Start a game first!'; return; }
+  if (!gs) { if(msg) msg.textContent = lbLabel('nogame'); return; }
   if (btn) { btn.disabled=true; btn.textContent='⏳…'; }
   const ok = await submitScore();
   if (btn) { btn.disabled=false; btn.textContent=lbLabel('submit'); }
-  if (msg) { msg.textContent = ok ? lbLabel('ok') : lbLabel('err'); setTimeout(()=>{ if(msg) msg.textContent=''; },3000); }
+  if (msg) {
+    msg.textContent = ok ? lbLabel('ok') : lbLabel('fail');
+    setTimeout(()=>{ if(msg) msg.textContent=''; }, 3000);
+  }
 }
 
 // ═══ INIT ═══
