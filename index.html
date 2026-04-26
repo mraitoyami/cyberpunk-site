@@ -433,6 +433,28 @@ body.lang-trad{font-family:"Noto Serif Mongolian","Segoe UI",serif}
   .osel{grid-template-columns:1fr 1fr}
 }
 
+/* ══ LEGENDARY OPPONENT ══ */
+.lb-legend-sep{text-align:center;color:var(--gold);font-size:.72em;letter-spacing:2px;padding:10px 0 5px;opacity:.7;text-transform:uppercase}
+.ocard.legendary{
+  border:2px solid var(--gold)!important;
+  background:linear-gradient(135deg,rgba(212,175,55,.14),rgba(176,58,46,.1))!important;
+  box-shadow:0 0 22px rgba(212,175,55,.25),inset 0 0 18px rgba(212,175,55,.04);
+  position:relative;overflow:hidden;
+}
+.ocard.legendary::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-conic-gradient(rgba(212,175,55,.04) 0deg 15deg,transparent 15deg 30deg);
+  animation:rotDeco 25s linear infinite;pointer-events:none;
+}
+.ocard.legendary:hover:not(.lk){
+  box-shadow:0 0 38px rgba(212,175,55,.45),inset 0 0 25px rgba(212,175,55,.08);
+  transform:translateY(-3px);
+}
+.ocard.legendary .oname{color:var(--gold);text-shadow:0 0 10px rgba(212,175,55,.5)}
+.ocard.legendary .oico{animation:legendFloat 2.5s ease-in-out infinite}
+@keyframes legendFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-5px) scale(1.1)}}
+.legend-badge{display:inline-block;background:linear-gradient(90deg,var(--gold),#f0c040);color:var(--blue);font-size:.62em;font-weight:bold;padding:2px 8px;border-radius:10px;letter-spacing:1px;margin-top:3px}
+
 /* ══ LEADERBOARD ══ */
 .lb-live{display:inline-flex;align-items:center;gap:5px;margin-left:auto;font-size:.65em;color:rgba(255,255,255,.45);letter-spacing:.5px}
 .lb-dot{width:7px;height:7px;border-radius:50%;background:#2ecc71;flex-shrink:0;box-shadow:0 0 6px #2ecc71;animation:lbPulse 1.6s infinite}
@@ -635,7 +657,8 @@ mn:{
     {n:'Энхбаяр',ico:'🤼‍♂️',d:'Аймгийн харцага',rank:1,str:17,spd:16,bal:15,end:16,hp:132,gold:45,xp:65,diff:'🟡 Дунд'},
     {n:'Гантулга',ico:'🤼‍♂️',d:'Аймгийн заан',rank:2,str:20,spd:18,bal:17,end:19,hp:150,gold:58,xp:85,diff:'🔴 Хэцүү'},
     {n:'Тэмүүжин',ico:'🏋️',d:'Улсын гарьд',rank:2,str:24,spd:21,bal:20,end:22,hp:170,gold:75,xp:110,diff:'🔴 Хэцүү'},
-    {n:'Баяр-Аварга',ico:'👑',d:'Улсын аварга',rank:3,str:29,spd:26,bal:25,end:27,hp:200,gold:120,xp:160,diff:'🔴 Маш хэцүү'}
+    {n:'Баяр-Аварга',ico:'👑',d:'Улсын аварга',rank:3,str:29,spd:26,bal:25,end:27,hp:200,gold:120,xp:160,diff:'🔴 Маш хэцүү'},
+    {n:'Бат-Эрдэнэ',ico:'⭐',d:'Монголын домогт тусгай аварга',rank:5,str:45,spd:40,bal:38,end:43,hp:380,gold:350,xp:500,diff:'⭐ Домогт',special:true}
   ],
   shopItems:[
     {id:0,n:'Ердийн Зодог',ico:'🎽',d:'Уламжлалт улаан зодог',b:'Тусгай чанар байхгүй',st:null,v:0,p:0,own:true},
@@ -798,7 +821,8 @@ en:{
     {n:'Enkhbayar',ico:'🤼‍♂️',d:'Provincial Hawk',rank:1,str:17,spd:16,bal:15,end:16,hp:132,gold:45,xp:65,diff:'🟡 Medium'},
     {n:'Gantulga',ico:'🤼‍♂️',d:'Provincial Elephant',rank:2,str:20,spd:18,bal:17,end:19,hp:150,gold:58,xp:85,diff:'🔴 Hard'},
     {n:'Temuujin',ico:'🏋️',d:'National Garuda',rank:2,str:24,spd:21,bal:20,end:22,hp:170,gold:75,xp:110,diff:'🔴 Hard'},
-    {n:'Bayar-Champion',ico:'👑',d:'National Champion',rank:3,str:29,spd:26,bal:25,end:27,hp:200,gold:120,xp:160,diff:'🔴 Very Hard'}
+    {n:'Bayar-Champion',ico:'👑',d:'National Champion',rank:3,str:29,spd:26,bal:25,end:27,hp:200,gold:120,xp:160,diff:'🔴 Very Hard'},
+    {n:'Bat-Erdene',ico:'⭐',d:'Legendary Special Champion of Mongolia',rank:5,str:45,spd:40,bal:38,end:43,hp:380,gold:350,xp:500,diff:'⭐ Legendary',special:true}
   ],
   shopItems:[
     {id:0,n:'Standard Zodog',ico:'🎽',d:'Traditional red wrestling jacket',b:'No special bonus',st:null,v:0,p:0,own:true},
@@ -953,7 +977,8 @@ tr:{
     {n:'ᠡᠩᠬᠡᠪᠠᠶᠠᠷ',ico:'🤼‍♂️',d:'ᠠᠢᠢᠮᠠᠭ ᠤᠨ ᠬᠠᠷᠴᠠᠭ᠎ᠠ',rank:1,str:17,spd:16,bal:15,end:16,hp:132,gold:45,xp:65,diff:'🟡 ᠳᠤᠮᠳᠠ'},
     {n:'ᠭᠠᠨᠲᠤᠯᠭ᠎ᠠ',ico:'🤼‍♂️',d:'ᠠᠢᠢᠮᠠᠭ ᠤᠨ ᠵᠠᠭᠠᠨ',rank:2,str:20,spd:18,bal:17,end:19,hp:150,gold:58,xp:85,diff:'🔴 ᠬᠡᠴᠡᠭᠦᠦ'},
     {n:'ᠲᠡᠮᠦᠵᠢᠨ',ico:'🏋️',d:'ᠤᠯᠤᠰ ᠤᠨ ᠭᠠᠷᠤᠳᠢ',rank:2,str:24,spd:21,bal:20,end:22,hp:170,gold:75,xp:110,diff:'🔴 ᠬᠡᠴᠡᠭᠦᠦ'},
-    {n:'ᠪᠠᠶᠠᠷ᠋ᠠᠪᠤᠷᠭᠤ',ico:'👑',d:'ᠤᠯᠤᠰ ᠤᠨ ᠠᠪᠤᠷᠭᠤ',rank:3,str:29,spd:26,bal:25,end:27,hp:200,gold:120,xp:160,diff:'🔴 ᠮᠠᠰᠢ ᠬᠡᠴᠡᠭᠦᠦ'}
+    {n:'ᠪᠠᠶᠠᠷ᠋ᠠᠪᠤᠷᠭᠤ',ico:'👑',d:'ᠤᠯᠤᠰ ᠤᠨ ᠠᠪᠤᠷᠭᠤ',rank:3,str:29,spd:26,bal:25,end:27,hp:200,gold:120,xp:160,diff:'🔴 ᠮᠠᠰᠢ ᠬᠡᠴᠡᠭᠦᠦ'},
+    {n:'ᠪᠠᠲᠤᠡᠷᠳᠡᠨᠢ',ico:'⭐',d:'ᠮᠣᠩᠭᠣᠯ ᠤᠨ ᠳᠣᠮᠣᠭᠲᠤ ᠣᠨᠴᠠ ᠠᠪᠤᠷᠭᠤ',rank:5,str:45,spd:40,bal:38,end:43,hp:380,gold:350,xp:500,diff:'⭐ ᠳᠣᠮᠣᠭᠲᠤ',special:true}
   ],
   shopItems:[
     {id:0,n:'ᠡᠩ ᠵᠣᠳᠤᠭ',ico:'🎽',d:'ᠤᠯᠠᠮᠵᠢᠯᠠᠯᠲᠤ ᠤᠯᠠᠭᠠᠨ ᠵᠣᠳᠤᠭ',b:'ᠣᠨᠴᠠ ᠴᠢᠨᠠᠷ ᠪᠠᠢᠢᠬᠤᠭᠤᠢ',st:null,v:0,p:0,own:true},
@@ -1362,19 +1387,28 @@ function newDay() {
 // ═══ BATTLE ═══
 function buildBattle() {
   const tx = S[lang];
+  const normalOpps = tx.opps.filter(o => !o.special);
+  const legendOpps = tx.opps.filter(o => o.special);
+  const legendSepLbl = lang==='mn'?'— Домогт өрсөлдөгч —':lang==='en'?'— Legendary Opponent —':'— ᠳᠣᠮᠣᠭᠲᠤ ᠡᠰᠡᠷᠭᠦᠴᠡᠭᠴᠢ —';
+
+  const renderOpp = (o,i) => {
+    const locked = o.rank > gs.rank;
+    return `<div class="ocard ${locked?'lk':''}${o.special?' legendary':''}" onclick="${locked?'':'selectOpp('+i+')'}">
+      <div class="oico">${o.ico}</div>
+      <div class="oname">${o.n}</div>
+      <div class="odesc">${o.d}</div>
+      <div style="font-size:.7em;margin-top:2px">${o.diff}</div>
+      ${o.special ? `<div class="legend-badge">⭐ ${lang==='mn'?'ДОМОГТ':lang==='en'?'LEGENDARY':'ᠳᠣᠮᠣᠭᠲᠤ'}</div>` : ''}
+      ${locked?`<div style="font-size:.7em;color:rgba(255,100,100,.8);margin-top:4px">${tx.oppLocked}</div>`:''}
+    </div>`;
+  };
+
   el('p-battle').innerHTML = `
     <div class="ptitle">${tx.ptBattle}</div>
     <div class="ib blue">${tx.oppSelectTitle}</div>
-    <div class="osel">${tx.opps.map((o,i)=>{
-      const locked = o.rank > gs.rank;
-      return `<div class="ocard ${locked?'lk':''}" onclick="${locked?'':'selectOpp('+i+')'}">
-        <div class="oico">${o.ico}</div>
-        <div class="oname">${o.n}</div>
-        <div class="odesc">${o.d}</div>
-        <div style="font-size:.7em">${o.diff}</div>
-        ${locked?`<div style="font-size:.7em;color:rgba(255,100,100,.8);margin-top:4px">${tx.oppLocked}</div>`:''}
-      </div>`;
-    }).join('')}</div>
+    <div class="osel">${normalOpps.map((o)=>renderOpp(o, tx.opps.indexOf(o))).join('')}</div>
+    <div class="lb-legend-sep">${legendSepLbl}</div>
+    <div class="osel">${legendOpps.map((o)=>renderOpp(o, tx.opps.indexOf(o))).join('')}</div>
   `;
 }
 
@@ -1390,6 +1424,18 @@ function selectOpp(i) {
     opp: o, oppIdx: i,
     phase:'select', log:[], turn:0, active:true
   };
+  if (o.special) {
+    const intro = lang==='mn'
+      ? '⭐ Бат-Эрдэнэ Аварга — Монголын домогт тусгай аварга бөх. Хамгийн хүчтэй дайсан!'
+      : lang==='en'
+      ? '⭐ Bat-Erdene — The Legendary Special Champion of Mongolia. The ultimate challenge!'
+      : '⭐ ᠪᠠᠲᠤᠡᠷᠳᠡᠨᠢ — ᠮᠣᠩᠭᠣᠯ ᠤᠨ ᠳᠣᠮᠣᠭᠲᠤ ᠣᠨᠴᠠ ᠠᠪᠤᠷᠭᠤ!';
+    showModal('⭐ '+o.n, '⭐', intro, [
+      {l: lang==='mn'?'⚔️ Барилдах!':lang==='en'?'⚔️ Fight!':'⚔️ ᠪᠠᠷᠢᠯᠳᠤᠬᠤ!', fn: ()=>renderBattleUI()},
+      {l: lang==='mn'?'Буцах':lang==='en'?'Back':'ᠪᠤᠴᠠᠬᠤ', fn: ()=>buildBattle()}
+    ]);
+    return;
+  }
   renderBattleUI();
 }
 
