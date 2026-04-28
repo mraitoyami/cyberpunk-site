@@ -519,6 +519,88 @@ body.lang-trad{font-family:"Noto Serif Mongolian","Segoe UI",serif}
   .lb-pod-name{font-size:.72em;max-width:80px}
   .lb-pod-score{font-size:.8em}
 }
+
+/* ══ HAMBURGER BUTTON ══ */
+#hamBtn{
+  display:none; /* hidden on desktop */
+  flex-direction:column;justify-content:center;align-items:center;
+  gap:5px;width:38px;height:38px;
+  background:rgba(255,255,255,.07);border:1px solid rgba(212,175,55,.25);
+  border-radius:9px;cursor:pointer;padding:0;flex-shrink:0;
+  transition:background .18s,border-color .18s;
+}
+#hamBtn:hover{background:rgba(212,175,55,.15);border-color:var(--gold)}
+#hamBtn span{
+  display:block;width:20px;height:2px;
+  background:rgba(255,255,255,.85);border-radius:2px;
+  transition:transform .25s,opacity .2s;
+}
+#hamBtn.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+#hamBtn.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+#hamBtn.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+/* ══ NAV DRAWER ══ */
+#navOverlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.55);z-index:900;
+  opacity:0;transition:opacity .25s;
+}
+#navOverlay.show{display:block}
+#navOverlay.visible{opacity:1}
+
+#navDrawer{
+  position:fixed;top:0;left:0;bottom:0;
+  width:240px;max-width:80vw;
+  background:linear-gradient(180deg,#0d1a2e 0%,#040a16 100%);
+  border-right:2px solid rgba(212,175,55,.28);
+  z-index:901;
+  transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;
+  overflow:hidden;
+}
+#navDrawer.open{transform:translateX(0)}
+
+.drawer-hdr{
+  padding:16px 14px 12px;
+  border-bottom:1px solid rgba(212,175,55,.18);
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+}
+.drawer-title{font-size:.95em;font-weight:bold;color:var(--gold);letter-spacing:1px}
+#drawerClose{
+  background:none;border:none;color:rgba(255,255,255,.5);
+  font-size:1.3em;cursor:pointer;padding:4px 8px;border-radius:6px;
+  transition:color .15s,background .15s;
+}
+#drawerClose:hover{color:#fff;background:rgba(255,255,255,.1)}
+
+#drawerNav{
+  flex:1;overflow-y:auto;padding:8px 0;
+  scrollbar-width:thin;scrollbar-color:rgba(212,175,55,.2) transparent;
+}
+#drawerNav .dnb{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 16px;font-size:.88em;
+  color:rgba(255,255,255,.7);
+  background:none;border:none;cursor:pointer;
+  width:100%;text-align:left;
+  border-left:3px solid transparent;
+  transition:background .15s,color .15s,border-color .15s;
+}
+#drawerNav .dnb:hover{background:rgba(212,175,55,.08);color:rgba(255,255,255,.95)}
+#drawerNav .dnb.on{
+  background:rgba(212,175,55,.12);color:var(--gold);
+  border-left-color:var(--gold);font-weight:600;
+}
+#drawerNav .dnb .dni{font-size:1.2em;width:24px;text-align:center;flex-shrink:0}
+#drawerNav .dnb.exit{color:rgba(255,100,100,.65);margin-top:8px;border-top:1px solid rgba(255,255,255,.07);padding-top:14px}
+#drawerNav .dnb.exit:hover{color:rgba(255,100,100,.95);background:rgba(255,50,50,.08)}
+
+/* ══ MOBILE: show hamburger, hide bottom nav ══ */
+@media(max-width:620px){
+  #hamBtn{display:flex}
+  .g-nav{display:none!important}
+}
 </style>
 </head>
 <body>
@@ -567,6 +649,9 @@ body.lang-trad{font-family:"Noto Serif Mongolian","Segoe UI",serif}
 <!-- ═══ GAME ═══ -->
 <div class="scr" id="s-game">
   <div class="g-hdr">
+    <button id="hamBtn" onclick="openDrawer()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
     <div class="gh-l">
       <span style="font-size:1em">🏆</span>
       <div><div class="gh-logo" id="ghLogo">ДЭВЖЭЭ</div><div class="gh-name" id="ghName">—</div></div>
@@ -607,6 +692,16 @@ body.lang-trad{font-family:"Noto Serif Mongolian","Segoe UI",serif}
 <div class="mov" id="modal"><div class="mbox"><h2 id="mT"></h2><div class="m-ico" id="mI"></div><p id="mP"></p><div id="mX"></div><div class="m-btns" id="mB"></div></div></div>
 <!-- UNLOCK -->
 <div class="uov" id="uov"><div class="u-ico" id="uI"></div><div class="u-title" id="uT"></div><div class="u-desc" id="uD"></div><button class="btn" style="margin-top:14px" id="uBtn"></button></div>
+
+<!-- NAV DRAWER -->
+<div id="navOverlay" onclick="closeDrawer()"></div>
+<div id="navDrawer">
+  <div class="drawer-hdr">
+    <span class="drawer-title">🏆 ДЭВЖЭЭ</span>
+    <button id="drawerClose" onclick="closeDrawer()" aria-label="Close">✕</button>
+  </div>
+  <div id="drawerNav"></div>
+</div>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -1276,19 +1371,55 @@ function updateHeader() {
 function buildNav() {
   const tx = S[lang];
   const navItems = [
-    {id:'home',ico:'🏠',lbl:tx.navHome},
-    {id:'battle',ico:'⚔️',lbl:tx.navBattle},
-    {id:'train',ico:'💪',lbl:tx.navTrain},
-    {id:'tour',ico:'🏅',lbl:tx.navTour},
-    {id:'shop',ico:'🛒',lbl:tx.navShop},
-    {id:'ach',ico:'🏆',lbl:tx.navAch},
-    {id:'mus',ico:'📚',lbl:tx.navMus},
-    {id:'cult',ico:'🏛️',lbl:tx.navCult},
-    {id:'lb',ico:'🏆',lbl:lang==='mn'?'Тэргүүлэгч':lang==='en'?'Ranking':'ᠲᠡᠷᠢᠭᠦᠯᠡᠭᠴᠢ'}
+    {id:'home',  ico:'🏠', lbl:tx.navHome},
+    {id:'battle',ico:'⚔️', lbl:tx.navBattle},
+    {id:'train', ico:'💪', lbl:tx.navTrain},
+    {id:'tour',  ico:'🏅', lbl:tx.navTour},
+    {id:'shop',  ico:'🛒', lbl:tx.navShop},
+    {id:'ach',   ico:'🏆', lbl:tx.navAch},
+    {id:'mus',   ico:'📚', lbl:tx.navMus},
+    {id:'cult',  ico:'🏛️', lbl:tx.navCult},
+    {id:'lb',    ico:'🎖️', lbl:lang==='mn'?'Тэргүүлэгч':lang==='en'?'Ranking':'ᠲᠡᠷᠢᠭᠦᠯᠡᠭᠴᠢ'}
   ];
+  // Bottom nav (desktop)
   el('gNav').innerHTML = navItems.map(n =>
     `<button class="nb${curPanel===n.id?' on':''}" onclick="renderPanel('${n.id}')"><span class="ni">${n.ico}</span>${n.lbl}</button>`
   ).join('') + `<button class="nb" onclick="exitGame()" style="margin-top:auto;color:rgba(255,100,100,.7)"><span class="ni">🚪</span>${tx.navExit}</button>`;
+  // Drawer nav (mobile)
+  const dn = el('drawerNav');
+  if (dn) {
+    dn.innerHTML = navItems.map(n =>
+      `<button class="dnb${curPanel===n.id?' on':''}" onclick="drawerNav('${n.id}')"><span class="dni">${n.ico}</span>${n.lbl}</button>`
+    ).join('') + `<button class="dnb exit" onclick="drawerExit()"><span class="dni">🚪</span>${tx.navExit}</button>`;
+  }
+}
+
+function drawerNav(id) { closeDrawer(); renderPanel(id); }
+function drawerExit()  { closeDrawer(); exitGame(); }
+
+function openDrawer() {
+  const overlay = el('navOverlay');
+  const drawer  = el('navDrawer');
+  const btn     = el('hamBtn');
+  buildNav(); // refresh labels
+  overlay.classList.add('show');
+  requestAnimationFrame(() => {
+    overlay.classList.add('visible');
+    drawer.classList.add('open');
+  });
+  if (btn) btn.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDrawer() {
+  const overlay = el('navOverlay');
+  const drawer  = el('navDrawer');
+  const btn     = el('hamBtn');
+  overlay.classList.remove('visible');
+  drawer.classList.remove('open');
+  if (btn) btn.classList.remove('open');
+  document.body.style.overflow = '';
+  setTimeout(() => overlay.classList.remove('show'), 260);
 }
 
 function renderPanel(id) {
