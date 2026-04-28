@@ -90,7 +90,7 @@ body.lang-trad{font-family:"Noto Serif Mongolian","Segoe UI",serif}
 .ng-pre:hover{background:rgba(212,175,55,.2);color:var(--gold)}
 
 /* ═══ GAME SCREEN ═══ */
-#s-game{flex-direction:column;height:100%}
+#s-game{flex-direction:column;height:100%;min-height:0}
 .g-hdr{background:linear-gradient(90deg,var(--dr),#c0392b,var(--dr));border-bottom:2px solid rgba(212,175,55,.5);padding:6px 14px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .gh-l{display:flex;align-items:center;gap:8px}
 .gh-logo{font-size:.88em;color:var(--gold);font-weight:bold;letter-spacing:1px}
@@ -107,7 +107,7 @@ body.lang-trad{font-family:"Noto Serif Mongolian","Segoe UI",serif}
 .gh-lb:hover,.gh-lb.on{background:rgba(212,175,55,.18);border-color:var(--gold);color:var(--gold)}
 .gh-lb.trad-font{font-family:"Noto Serif Mongolian",serif}
 
-.g-body{display:flex;flex:1;overflow:hidden}
+.g-body{display:flex;flex:1;overflow:hidden;min-height:0}
 .g-nav{width:148px;background:rgba(5,12,25,.95);border-right:1px solid rgba(212,175,55,.18);display:flex;flex-direction:column;padding:5px 0;flex-shrink:0;overflow-y:auto}
 .nsec{padding:5px 12px 2px;font-size:.6em;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
 .nb{background:none;border:none;color:rgba(255,255,255,.65);padding:9px 12px;text-align:left;cursor:pointer;font-size:.83em;transition:.18s;border-left:3px solid transparent;display:flex;align-items:center;gap:7px;width:100%}
@@ -300,32 +300,44 @@ body.lang-trad{font-family:"Noto Serif Mongolian","Segoe UI",serif}
   .gh-rank{font-size:.68em;padding:2px 6px}
   .gh-gold{font-size:.67em;padding:2px 5px}
 
-  /* Bottom nav */
-  .g-body{flex-direction:column-reverse;overflow:visible}
+  /* Bottom nav — flex column, nav pinned to bottom */
+  .g-body{
+    flex-direction:column;
+    overflow:hidden;   /* ← was 'visible', broke scroll containment */
+    flex:1;
+    min-height:0;      /* ← lets the flex child shrink properly */
+  }
   .g-nav{
+    order:2;           /* ← always last = bottom */
     width:100%;height:auto;
     flex-direction:row;overflow-x:auto;overflow-y:hidden;
     border-right:none;border-top:2px solid rgba(212,175,55,.25);
     padding:0;flex-shrink:0;
     -webkit-overflow-scrolling:touch;
-    scrollbar-width:none;position:relative;
+    scrollbar-width:none;
     background:rgba(4,10,22,.98);
     z-index:50;
   }
   .g-nav::-webkit-scrollbar{display:none}
   .nb{
-    flex-direction:column;padding:7px 6px 5px;
-    font-size:.58em;border-left:none;
+    flex-direction:column;padding:8px 5px 6px;
+    font-size:.6em;border-left:none;
     border-top:2.5px solid transparent;
-    min-width:54px;flex:1;justify-content:center;
+    min-width:52px;flex:1;justify-content:center;
     align-items:center;gap:2px;white-space:nowrap;
-    letter-spacing:0;
+    letter-spacing:0;min-height:54px;
   }
   .nb.on{background:rgba(212,175,55,.1);border-left-color:transparent;border-top-color:var(--gold);color:var(--gold)}
-  .nb .ni{width:auto;font-size:1.5em;display:block}
+  .nb .ni{width:auto;font-size:1.4em;display:block}
   .g-con{
-    flex:1;overflow-y:auto;padding:11px 11px;
+    order:1;           /* ← content always above nav */
+    flex:1;
+    min-height:0;      /* ← KEY: without this, flex child won't scroll */
+    overflow-y:auto;
+    overflow-x:hidden;
+    padding:12px 11px 16px;
     -webkit-overflow-scrolling:touch;
+    touch-action:pan-y;
   }
 
   /* Content */
